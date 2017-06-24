@@ -1,0 +1,68 @@
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-release" }
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.4.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-release" }
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-logging"
+        exclude module: "logback-classic"
+    }
+    compile("commons-logging:commons-logging:1.2")
+    compile("org.jsoup:jsoup:1.10.1")
+    compile 'org.hibernate:hibernate-core:5.2.3.Final'
+    compile ('org.hibernate:hibernate-entitymanager:5.2.3.Final')
+    compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+
+    /*****************************************************************/
+    /*Если недеплотся на WildFly поможет одна из библиотек*/
+    compile group: 'commons-io', name: 'commons-io', version:'1.3.1'
+    compile group: 'commons-logging', name: 'commons-logging', version:'1.1.1'
+    compile group: 'commons-collections', name: 'commons-collections', version:'3.2.1'
+    compile group: 'log4j', name: 'log4j', version:'1.2.16'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version:'1.6.4'
+    providedCompile group: 'dom4j', name: 'dom4j', version:'1.6.1'
+    compile group: 'org.apache.poi', name: 'poi', version:'3.7'
+    compile group: 'jfree', name: 'jcommon', version:'1.0.16'
+    compile group: 'com.jhlabs', name: 'filters', version:'2.0.235'
+    compile group: 'jfree', name: 'jfreechart', version:'1.0.13'
+    compile group: 'net.sf.jasperreports', name: 'jasperreports', version:'4.0.1'
+    compile group: 'rome', name: 'rome', version:'1.0'
+
+    /*
+    compile group: 'commons-digester', name: 'commons-digester', version:'2.1'
+    providedCompile group: 'org.hibernate', name: 'hibernate-core', version:'5.2.3.Final'
+    providedCompile group: 'org.hibernate', name: 'hibernate-entitymanager', version:'5.2.3.Final'
+    providedCompile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version:'1.0.0.Final'
+    */
+    /*****************************************************************/
+
+    /*compile 'org.hibernate:hibernate-c3p0:5.2.5.Final'
+    compile 'c3p0:c3p0:0.9.1.2'*/
+    compile 'mysql:mysql-connector-java:5.1.42'
+    testCompile("junit:junit")
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}
