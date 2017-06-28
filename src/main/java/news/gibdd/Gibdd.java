@@ -6,21 +6,27 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import utils.ConstantManager;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by golit on 21.06.2017.
  */
 public class Gibdd implements Model {
+
     @Override
     public NewsItem[] getItems(String searchWord) {
-        String url1 = "http://www.gibdd.ru/r/74/accident/?PAGEN_1=1";
-        String url2 = "http://www.gibdd.ru/r/74/accident/?PAGEN_1=2";
+        String url1 = ConstantManager.GIBDDPAGE1;
+        String url2 = ConstantManager.GIBDDPAGE2;
         CopyOnWriteArrayList<NewsItem> newsItems = new CopyOnWriteArrayList<>();
         ArrayList<Thread> runnables = new ArrayList<>();
         runnables.add(createThreadForScan(url1, newsItems));
@@ -53,12 +59,23 @@ public class Gibdd implements Model {
 
     private ArrayList<NewsItem> getItemsFromPage(Document page) {
         ArrayList<NewsItem> arrayList = new ArrayList<>();
-        Elements elements = page.getElementsByClass("title");
+        Elements elements = page.getElementsByClass("news_item_img");
         for (Element element:elements){
-            System.out.println("***************************************");
-            System.out.println(element);
+            Element title = element.getElementsByClass("title").first();
+            Element dateElem = element.getElementsByClass("news-date").first();
+            String name = title.text();
+            String url = title.child(0).absUrl("href");
+            DateFormat format = new SimpleDateFormat("dd MMMMM yyyy");
+            Date date;
+            try {
+                date = format.parse(dateElem.text());
+            } catch (ParseException e) {
+                date = new Date();
+            }
+            NewsItem item = new NewsItem(name,url,0,"",date);
+            arrayList.add(item);
         }
-        return null;
+        return arrayList;
     }
 
     private Document getDocument(String url) {
@@ -71,8 +88,12 @@ public class Gibdd implements Model {
         return document;
     }
 
-    public static void main(String[] args) {
-        new Gibdd().getItems("");
+    /*public static void main(String[] args) {
+        NewsItem[] newsItems = new Gibdd().getItems("");
+        for (NewsItem item: newsItems){
+            System.out.println("****************************");
+            System.out.println(item);
+        }
     }
-
+*/
 }

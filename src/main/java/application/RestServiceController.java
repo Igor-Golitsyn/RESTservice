@@ -1,6 +1,7 @@
 package application;
 
 import news.gibdd.Gibdd;
+import news.mchs.Mchs74;
 import newsList.NewsListController;
 import newsList.NewsListItem;
 import news.tv31.Channel31;
@@ -10,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import news.NewsItem;
 import news.Model;
 import news.ruTor.RuTorSearch;
-
-import javax.jws.WebParam;
 
 /**
  * Created by golit on 05.06.2017.
@@ -26,10 +25,8 @@ public class RestServiceController {
     }
 
     @RequestMapping("/newsList")
-    public NewsListItem[] getNewsList(@RequestParam(value = "name", required = false) String name,
-                                      @RequestParam(value = "newsListItem", required = false) NewsListItem newsListItem) {
-        if (newsListItem == null || name == null) return NewsListController.ENUM.getNewsList();
-        else return NewsListController.ENUM.writeToBase(name, newsListItem);
+    public NewsListItem[] getNewsList() {
+        return NewsListController.CONTROLLER.getNewsList();
     }
 
     @RequestMapping("/gibdd")
@@ -43,4 +40,10 @@ public class RestServiceController {
         Model channel31 = new Channel31();
         return channel31.getItems("");
     }
+    @RequestMapping("/mchs74")
+    public NewsItem[] getMchsOperational() {
+        Model mchs = new Mchs74();
+        return mchs.getItems("");
+    }
+
 }

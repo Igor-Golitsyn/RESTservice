@@ -11,13 +11,13 @@ import java.util.logging.Logger;
  * Created by golit on 19.06.2017.
  */
 public enum NewsListController {
-    ENUM;
+    CONTROLLER;
     private EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewsList");
     private EntityManager em = factory.createEntityManager();
 
     public NewsListItem[] getNewsList() {
         em.getTransaction().begin();
-        TypedQuery<NewsListItem> namedQuery = em.createNamedQuery(NewsListItem.class.getSimpleName() + ".getAll", NewsListItem.class);
+        TypedQuery<NewsListItem> namedQuery = em.createNamedQuery("NewsListItem.getAll", NewsListItem.class);
         List<NewsListItem> newsListItems = namedQuery.getResultList();
         em.getTransaction().commit();
         // em.close();
@@ -52,10 +52,11 @@ public enum NewsListController {
     }
 
    /* public static void main(String[] args) {
-        //NewsListController.ENUM.writeToBase("ГИБДД", new NewsListItem("ГИБДД","/gibdd",true,false));
-        //NewsListController.ENUM.writeToBase("RUTOR.info", new NewsListItem("RUTOR.info","/torrent",true,true));
-        NewsListController.ENUM.writeToBase("31TV.ru", new NewsListItem("31TV.ru","/31tv",true,false));
-        NewsListItem[] news = NewsListController.ENUM.getNewsList();
+        //NewsListController.CONTROLLER.writeToBase("ГИБДД", new NewsListItem("ГИБДД","/gibdd",true,false));
+        //NewsListController.CONTROLLER.writeToBase("RUTOR.info", new NewsListItem("RUTOR.info","/torrent",true,true));
+        NewsListItem itemNew = new NewsListItem("74.mchs.gov.ru","/mchs74",true,false);
+        NewsListController.CONTROLLER.writeToBase(itemNew.getName(),itemNew);
+        NewsListItem[] news = NewsListController.CONTROLLER.getNewsList();
         for (NewsListItem item : news) {
             System.out.println(item);
         }

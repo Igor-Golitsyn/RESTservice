@@ -19,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by golit on 05.06.2017.
  */
 public class RuTorSearch implements Model {
+
     /**
      * Возвращает массив раздач
      *
@@ -54,14 +55,14 @@ public class RuTorSearch implements Model {
      * @return Document
      */
     private Document getStartDocument() {
+        Document document = new Document("");
         for (RutorMirrors mirror : RutorMirrors.values()) {
             try {
-                Document document = Jsoup.connect(mirror.toString()).get();
-                return document;
+                document = Jsoup.connect(mirror.toString()).get();
             } catch (IOException e) {
             }
         }
-        return new Document("");
+        return document;
     }
 
     /**

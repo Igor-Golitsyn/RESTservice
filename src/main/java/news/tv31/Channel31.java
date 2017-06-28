@@ -6,6 +6,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import utils.ConstantManager;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -20,6 +21,7 @@ import java.util.Iterator;
  * Created by golit on 13.06.2017.
  */
 public class Channel31 implements Model {
+
     @Override
     public NewsItem[] getItems(String searchWord) {
         Document document = getDocument();
@@ -50,7 +52,7 @@ public class Channel31 implements Model {
     }
 
     private Document getDocument() {
-        String url = "https://31tv.ru/novosti";
+        String url = ConstantManager.TV31NEWSURL;
         Document document;
         try {
             document = Jsoup.connect(url).get();
