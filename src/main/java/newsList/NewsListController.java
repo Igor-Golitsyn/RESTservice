@@ -25,11 +25,11 @@ public enum NewsListController {
         return newsListItems.toArray(new NewsListItem[newsListItems.size()]);
     }
 
-    public NewsListItem[] writeToBase(String name, NewsListItem newsListItem) {
+    public NewsListItem[] writeToBase(NewsListItem newsListItem) {
         //EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewsList");
         //EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
-        TypedQuery<NewsListItem> namedQuery = em.createNamedQuery("NewsListItem.find", NewsListItem.class).setParameter("name", name);
+        TypedQuery<NewsListItem> namedQuery = em.createNamedQuery("NewsListItem.find", NewsListItem.class).setParameter("name", newsListItem.getName());
         NewsListItem item;
         try {
             item = namedQuery.getSingleResult();
