@@ -25,7 +25,8 @@ public class RestServiceController {
     }
 
     @RequestMapping("/newsList")
-    public NewsListItem[] getNewsList() {
+    public NewsListItem[] getNewsList(@RequestParam(value = "item", required = false) NewsListItem item) {
+        if (item != null) return NewsListController.CONTROLLER.writeToBase(item);
         return NewsListController.CONTROLLER.getNewsList();
     }
 
@@ -40,6 +41,7 @@ public class RestServiceController {
         Model channel31 = new Channel31();
         return channel31.getItems("");
     }
+
     @RequestMapping("/mchs74")
     public NewsItem[] getMchsOperational() {
         Model mchs = new Mchs74();
