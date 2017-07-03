@@ -27,6 +27,7 @@ public class Gibdd implements Model {
 
     @Override
     public NewsItem[] getItems(String searchWord) {
+        System.out.println(this.hashCode()+ "***************************");
         String url1 = ConstantManager.GIBDDPAGE1;
         String url2 = ConstantManager.GIBDDPAGE2;
         CopyOnWriteArrayList<NewsItem> newsItems = new CopyOnWriteArrayList<>();

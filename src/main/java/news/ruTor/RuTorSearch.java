@@ -1,6 +1,8 @@
 package news.ruTor;
 
 import news.NewsItem;
+import news.NewsPage;
+import news.PageRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document;
@@ -32,6 +34,11 @@ public class RuTorSearch implements Model {
         word = word.trim();
         word = word.replaceAll(" ", "%20");
         return word.length() > 2 ? getItemsFromWord(word) : getSartItems();
+    }
+
+    @Override
+    public NewsPage getNewsPage(PageRequest pageRequest) {
+        return null;
     }
 
     /**

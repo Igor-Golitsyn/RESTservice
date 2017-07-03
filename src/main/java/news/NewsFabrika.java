@@ -8,8 +8,8 @@ import news.tv31.Channel31;
 /**
  * Created by golit on 03.07.2017.
  */
-public enum NewsFabrika {
-    NEWS_FABRIKA;
+public class NewsFabrika {
+
 
     public Model createNews(String name) {
         switch (name) {

@@ -2,6 +2,8 @@ package news.mchs;
 
 import news.Model;
 import news.NewsItem;
+import news.NewsPage;
+import news.PageRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -58,6 +60,11 @@ public class Mchs74 implements Model {
             }
         });
         return newsItems.toArray(new NewsItem[newsItems.size()]);
+    }
+
+    @Override
+    public NewsPage getNewsPage(PageRequest pageRequest) {
+        return null;
     }
 
     private Document getDocument(String url) {

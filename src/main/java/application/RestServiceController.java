@@ -21,7 +21,7 @@ public class RestServiceController {
 
     @RequestMapping("/torrent")
     public NewsItem[] getTorrent(@RequestParam(value = "word", required = false, defaultValue = "") String word) {
-        Model model = NewsFabrika.NEWS_FABRIKA.createNews("torrent");
+        Model model = new NewsFabrika().createNews("torrent");
         return model == null ? new NewsItem[0] : model.getItems(word);
     }
 
@@ -38,25 +38,26 @@ public class RestServiceController {
 
     @RequestMapping("/gibdd")
     public NewsItem[] getGibdd() {
-        Model model = NewsFabrika.NEWS_FABRIKA.createNews("gibdd");
+        Model model = new NewsFabrika().createNews("gibdd");
+        System.out.println(model);
         return model == null ? new NewsItem[0] : model.getItems("");
     }
 
     @RequestMapping("/31tv")
     public NewsItem[] get31tv() {
-        Model model = NewsFabrika.NEWS_FABRIKA.createNews("31tv");
+        Model model = new NewsFabrika().createNews("31tv");
         return model == null ? new NewsItem[0] : model.getItems("");
     }
 
     @RequestMapping("/mchs74")
     public NewsItem[] getMchsOperational() {
-        Model model = NewsFabrika.NEWS_FABRIKA.createNews("mchs74");
+        Model model = new NewsFabrika().createNews("mchs74");
         return model == null ? new NewsItem[0] : model.getItems("");
     }
 
     @RequestMapping("/newsPage")
     public NewsPage getNewsPage(@RequestBody PageRequest pageRequest) {
-        Model model = NewsFabrika.NEWS_FABRIKA.createNews(pageRequest.getClassName());
+        Model model = new NewsFabrika().createNews(pageRequest.getClassName());
         return model == null ?
                 new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, null, null, null, null, null, null) :
                 model.getNewsPage(pageRequest);

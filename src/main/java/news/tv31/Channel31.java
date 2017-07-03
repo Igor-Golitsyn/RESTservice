@@ -2,6 +2,8 @@ package news.tv31;
 
 import news.Model;
 import news.NewsItem;
+import news.NewsPage;
+import news.PageRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -51,6 +53,11 @@ public class Channel31 implements Model {
         });
         System.out.println(newsItems);
         return newsItems.toArray(new NewsItem[newsItems.size()]);
+    }
+
+    @Override
+    public NewsPage getNewsPage(PageRequest pageRequest) {
+        return null;
     }
 
     private Document getDocument() {
