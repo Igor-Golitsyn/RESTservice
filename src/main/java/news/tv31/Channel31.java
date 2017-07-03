@@ -15,12 +15,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Created by golit on 13.06.2017.
  */
 public class Channel31 implements Model {
+    private final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yy hh:mm");
 
     @Override
     public NewsItem[] getItems(String searchWord) {
@@ -32,10 +32,12 @@ public class Channel31 implements Model {
         for (Element element : news) {
             String name = element.getElementsByClass("title").first().text();
             String url = element.getElementsByClass("title").first().child(0).absUrl("href");
-            DateFormat format = new SimpleDateFormat("dd.MM.yy hh:mm");
+            //DateFormat FORMAT = new SimpleDateFormat("dd.MM.yy hh:mm");
             Date date;
             try {
-                date = format.parse(element.getElementsByClass("date").first().text());
+                synchronized (FORMAT) {
+                    date = FORMAT.parse(element.getElementsByClass("date").first().text());
+                }
             } catch (ParseException e) {
                 date = new Date();
             }

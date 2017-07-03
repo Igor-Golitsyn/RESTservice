@@ -2,6 +2,8 @@ package news.gibdd;
 
 import news.Model;
 import news.NewsItem;
+import news.NewsPage;
+import news.PageRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +15,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -22,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by golit on 21.06.2017.
  */
 public class Gibdd implements Model {
+    private final DateFormat FORMAT = new SimpleDateFormat("dd MMMMM yyyy");
 
     @Override
     public NewsItem[] getItems(String searchWord) {
@@ -43,14 +45,19 @@ public class Gibdd implements Model {
                 return o2.getDate().compareTo(o1.getDate());
             }
         });
-        return ( newsItems.toArray(new NewsItem[newsItems.size()]));
+        return (newsItems.toArray(new NewsItem[newsItems.size()]));
+    }
+
+    @Override
+    public NewsPage getNewsPage(PageRequest pageRequest) {
+        return null;
     }
 
     private Thread createThreadForScan(String url, CopyOnWriteArrayList<NewsItem> newsItems) {
         Thread thread = new Thread(() -> {
             Document page = getDocument(url);
-            if (page != null){
-            newsItems.addAll(getItemsFromPage(page));
+            if (page != null) {
+                newsItems.addAll(getItemsFromPage(page));
             }
         });
         thread.start();
@@ -60,19 +67,20 @@ public class Gibdd implements Model {
     private ArrayList<NewsItem> getItemsFromPage(Document page) {
         ArrayList<NewsItem> arrayList = new ArrayList<>();
         Elements elements = page.getElementsByClass("news_item_img");
-        for (Element element:elements){
+        for (Element element : elements) {
             Element title = element.getElementsByClass("title").first();
             Element dateElem = element.getElementsByClass("news-date").first();
             String name = title.text();
             String url = title.child(0).absUrl("href");
-            DateFormat format = new SimpleDateFormat("dd MMMMM yyyy");
             Date date;
             try {
-                date = format.parse(dateElem.text());
+                synchronized (FORMAT) {
+                    date = FORMAT.parse(dateElem.text());
+                }
             } catch (ParseException e) {
                 date = new Date();
             }
-            NewsItem item = new NewsItem(name,url,0,"",date);
+            NewsItem item = new NewsItem(name, url, 0, "", date);
             arrayList.add(item);
         }
         return arrayList;
