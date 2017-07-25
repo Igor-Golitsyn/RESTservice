@@ -1,6 +1,8 @@
 package news.ruTor;
 
 import news.NewsItem;
+import news.NewsPage;
+import news.PageRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document;
@@ -19,6 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by golit on 05.06.2017.
  */
 public class RuTorSearch implements Model {
+    private final DateFormat FORMAT = new SimpleDateFormat("dd MMM yy");
 
     /**
      * Возвращает массив раздач
@@ -31,6 +34,11 @@ public class RuTorSearch implements Model {
         word = word.trim();
         word = word.replaceAll(" ", "%20");
         return word.length() > 2 ? getItemsFromWord(word) : getSartItems();
+    }
+
+    @Override
+    public NewsPage getNewsPage(PageRequest pageRequest) {
+        return null;
     }
 
     /**
@@ -84,10 +92,12 @@ public class RuTorSearch implements Model {
             String seed = element.getElementsByClass("green").get(0).text();
             String stringDate = element.child(0).text();
             stringDate = element.child(0).text().replaceAll(String.valueOf(stringDate.charAt(2)), " ");
-            DateFormat format = new SimpleDateFormat("dd MMM yy");
+            //DateFormat FORMAT = new SimpleDateFormat("dd MMM yy");
             Date date;
             try {
-                date = format.parse(stringDate);
+                synchronized (FORMAT) {
+                    date = FORMAT.parse(stringDate);
+                }
             } catch (ParseException e) {
                 date = new Date();
             }

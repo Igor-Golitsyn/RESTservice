@@ -2,6 +2,8 @@ package news.mchs;
 
 import news.Model;
 import news.NewsItem;
+import news.NewsPage;
+import news.PageRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,6 +23,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by golit on 28.06.2017.
  */
 public class Mchs74 implements Model {
+    private final DateFormat FORMAT = new SimpleDateFormat("dd MMMMM");
+    private final DateFormat FORMATCURRENTDAY = new SimpleDateFormat("HH:mm");
+
     @Override
     public NewsItem[] getItems(String searchWord) {
         Document startDocument = getDocument(ConstantManager.MCHSOPERATIONAL);
@@ -57,6 +62,11 @@ public class Mchs74 implements Model {
         return newsItems.toArray(new NewsItem[newsItems.size()]);
     }
 
+    @Override
+    public NewsPage getNewsPage(PageRequest pageRequest) {
+        return null;
+    }
+
     private Document getDocument(String url) {
         Document document;
         try {
@@ -69,20 +79,22 @@ public class Mchs74 implements Model {
 
     private ArrayList<NewsItem> getNewsItems(Document document) {
         ArrayList<NewsItem> items = new ArrayList<>();
-        DateFormat format = new SimpleDateFormat("dd MMMMM");
-        DateFormat formatCuerrentDay = new SimpleDateFormat("HH:mm");
         Elements elements = document.getElementsByClass("imnl-item");
         for (Element el : elements) {
             String name = el.getElementsByClass("imnl-title").first().text();
             String url = el.getElementsByClass("imnl-title").first().getElementsByAttribute("href").first().absUrl("href");
             Date date;
             try {
-                date = format.parse(el.getElementsByClass("imn-date").first().text());
+                synchronized (FORMAT) {
+                    date = FORMAT.parse(el.getElementsByClass("imn-date").first().text());
+                }
                 if (date.getMonth() - new Date().getMonth() > 1) date.setYear(new Date().getYear() - 1);
                 else date.setYear(new Date().getYear());
             } catch (ParseException e) {
                 try {
-                    date = formatCuerrentDay.parse(el.getElementsByClass("imn-date").first().text());
+                    synchronized (FORMATCURRENTDAY) {
+                        date = FORMATCURRENTDAY.parse(el.getElementsByClass("imn-date").first().text());
+                    }
                     date.setDate(new Date().getDate());
                     date.setYear(new Date().getYear());
                     date.setMonth(new Date().getMonth());
@@ -90,12 +102,12 @@ public class Mchs74 implements Model {
                     date = new Date();
                 }
             }
-            items.add(new NewsItem(name,url,0,"",date));
+            items.add(new NewsItem(name, url, 0, "", date));
         }
         return items;
     }
 
-    /*public static void main(String[] args) {
+   /* public static void main(String[] args) {
         NewsItem[] newsItems = new Mchs74().getItems("");
         for (NewsItem item:newsItems){
             System.out.println("****************************");

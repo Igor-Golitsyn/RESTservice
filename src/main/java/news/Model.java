@@ -7,4 +7,5 @@ import news.NewsItem;
  */
 public interface Model {
     NewsItem[] getItems(String searchWord);
+    NewsPage getNewsPage(PageRequest pageRequest);
 }
