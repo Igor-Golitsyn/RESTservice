@@ -2,7 +2,6 @@ package newsList;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -21,7 +20,6 @@ public enum NewsListController {
         TypedQuery<NewsListItem> namedQuery = em.createNamedQuery("NewsListItem.getAll", NewsListItem.class);
         List<NewsListItem> newsListItems = namedQuery.getResultList();
         em.getTransaction().commit();
-        newsListItems.removeIf(item -> !item.isShowNewsList());
         // em.close();
         // factory.close();
         return newsListItems.toArray(new NewsListItem[newsListItems.size()]);
@@ -53,11 +51,11 @@ public enum NewsListController {
         return getNewsList();
     }
 
-    /*public static void main(String[] args) {
+   /* public static void main(String[] args) {
         //NewsListController.CONTROLLER.writeToBase("ГИБДД", new NewsListItem("ГИБДД","/gibdd",true,false));
         //NewsListController.CONTROLLER.writeToBase("RUTOR.info", new NewsListItem("RUTOR.info","/torrent",true,true));
         NewsListItem itemNew = new NewsListItem("74.mchs.gov.ru","/mchs74",true,false);
-        //NewsListController.CONTROLLER.writeToBase(itemNew.getClassName(),itemNew);
+        NewsListController.CONTROLLER.writeToBase(itemNew.getName(),itemNew);
         NewsListItem[] news = NewsListController.CONTROLLER.getNewsList();
         for (NewsListItem item : news) {
             System.out.println(item);

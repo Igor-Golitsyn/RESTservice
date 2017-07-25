@@ -4,26 +4,26 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
              version="1.0">
 
-    <persistence-unit className="NewsList" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="NewsList" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>newsList.NewsListItem</class>
         <properties>
-            <property className="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-            <property className="hibernate.connection.url" value="jdbc:mysql://127.0.0.1:3306/newslist"/>
-            <property className="hibernate.connection.username" value="newsList"/>
-            <property className="hibernate.connection.password" value="newsList"/>
-            <property className="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property className="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://127.0.0.1:3306/newslist"/>
+            <property name="hibernate.connection.username" value="newsList"/>
+            <property name="hibernate.connection.password" value="newsList"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             
-            <!--<propeclassNamename="hibernate.c3p0.acquire_increment" value="1"/>
-            <propeclassNamename="hibernate.c3p0.idle_test_period" value="1"/>
-            <propeclassNamename="hibernate.c3p0.min_size" value="1"/>
-            <propeclassNamename="hibernate.c3p0.max_size" value="2"/>
-            <propeclassNamename="hibernate.c3p0.max_statements" value="50"/>
-            <propeclassNamename="hibernate.c3p0.timeout" value="1"/>
-            <propeclassNamename="hibernate.c3p0.acquireRetryAttempts" value="1"/>
-            <propeclassNamename="hibernate.c3p0.acquireRetryDelay" value="250"/>
-            <propeclassNamename="hibernate.c3p0.autoCommitOnClose" value="true"/>-->
+            <!--<property name="hibernate.c3p0.acquire_increment" value="1"/>
+            <property name="hibernate.c3p0.idle_test_period" value="1"/>
+            <property name="hibernate.c3p0.min_size" value="1"/>
+            <property name="hibernate.c3p0.max_size" value="2"/>
+            <property name="hibernate.c3p0.max_statements" value="50"/>
+            <property name="hibernate.c3p0.timeout" value="1"/>
+            <property name="hibernate.c3p0.acquireRetryAttempts" value="1"/>
+            <property name="hibernate.c3p0.acquireRetryDelay" value="250"/>
+            <property name="hibernate.c3p0.autoCommitOnClose" value="true"/>-->
         </properties>
     </persistence-unit>
 </persistence>
