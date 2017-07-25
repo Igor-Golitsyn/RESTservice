@@ -51,7 +51,7 @@ public class RuTorSearch implements Model {
         newsItems.sort(new Comparator<NewsItem>() {
             @Override
             public int compare(NewsItem o1, NewsItem o2) {
-                return o2.getDate().compareTo(o1.getDate());
+                return Long.compare(o2.getDate(),o1.getDate());
             }
         });
         return newsItems.toArray(new NewsItem[newsItems.size()]);
@@ -103,7 +103,7 @@ public class RuTorSearch implements Model {
             }
             seed = seed.substring(1, seed.length());
             int seeders = Integer.parseInt(seed);
-            if (seeders > 0) newsItems.add(new NewsItem(name, link, seeders, size, date));
+            if (seeders > 0) newsItems.add(new NewsItem(name, link, seeders, size, date.getTime()));
         }
         return newsItems;
     }

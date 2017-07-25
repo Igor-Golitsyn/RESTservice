@@ -1,5 +1,11 @@
 package news;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,9 +16,9 @@ public class NewsItem {
     private String link;
     private int seeders;
     private String size;
-    private Date date;
+    private long date;
 
-    public NewsItem(String name, String link, int seeders, String size, Date date) {
+    public NewsItem(String name, String link, int seeders, String size, long date) {
         this.name = name;
         this.link = link;
         this.seeders = seeders;
@@ -36,7 +42,7 @@ public class NewsItem {
         return size;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 

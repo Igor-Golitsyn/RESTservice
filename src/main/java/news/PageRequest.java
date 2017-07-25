@@ -1,9 +1,11 @@
 package news;
 
+import java.io.Serializable;
+
 /**
  * Created by golit on 03.07.2017.
  */
-public class PageRequest {
+public class PageRequest implements Serializable {
     private String url;
     private String newsName;
     private int size;
@@ -36,5 +38,14 @@ public class PageRequest {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return "PageRequest{" +
+                "url='" + url + '\'' +
+                ", newsName='" + newsName + '\'' +
+                ", size=" + size +
+                '}';
     }
 }

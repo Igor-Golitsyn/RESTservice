@@ -43,12 +43,12 @@ public class Channel31 implements Model {
             } catch (ParseException e) {
                 date = new Date();
             }
-            newsItems.add(new NewsItem(name, url, 0, "", date));
+            newsItems.add(new NewsItem(name, url, 0, "", date.getTime()));
         }
         newsItems.sort(new Comparator<NewsItem>() {
             @Override
             public int compare(NewsItem o1, NewsItem o2) {
-                return o2.getDate().compareTo(o1.getDate());
+                return Long.compare(o2.getDate(),o1.getDate());
             }
         });
         System.out.println(newsItems);

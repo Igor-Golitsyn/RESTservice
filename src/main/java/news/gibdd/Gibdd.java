@@ -44,7 +44,7 @@ public class Gibdd implements Model {
         newsItems.sort(new Comparator<NewsItem>() {
             @Override
             public int compare(NewsItem o1, NewsItem o2) {
-                return o2.getDate().compareTo(o1.getDate());
+                return Long.compare(o2.getDate(),o1.getDate());
             }
         });
         return (newsItems.toArray(new NewsItem[newsItems.size()]));
@@ -141,7 +141,7 @@ public class Gibdd implements Model {
             } catch (ParseException e) {
                 date = new Date();
             }
-            NewsItem item = new NewsItem(name, url, 0, "", date);
+            NewsItem item = new NewsItem(name, url, 0, "", date.getTime());
             arrayList.add(item);
         }
         return arrayList;

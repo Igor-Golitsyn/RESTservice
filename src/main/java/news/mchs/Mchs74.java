@@ -56,7 +56,7 @@ public class Mchs74 implements Model {
         newsItems.sort(new Comparator<NewsItem>() {
             @Override
             public int compare(NewsItem o1, NewsItem o2) {
-                return o2.getDate().compareTo(o1.getDate());
+                return Long.compare(o2.getDate(),o1.getDate());
             }
         });
         return newsItems.toArray(new NewsItem[newsItems.size()]);
@@ -102,7 +102,7 @@ public class Mchs74 implements Model {
                     date = new Date();
                 }
             }
-            items.add(new NewsItem(name, url, 0, "", date));
+            items.add(new NewsItem(name, url, 0, "", date.getTime()));
         }
         return items;
     }

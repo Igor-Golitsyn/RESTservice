@@ -35,7 +35,6 @@ public class RestServiceController {
     @RequestMapping("/gibdd")
     public NewsItem[] getGibdd() {
         Model model = NewsFabrika.FABRIKA.createNews("gibdd");
-        System.out.println(model);
         return model == null ? new NewsItem[0] : model.getItems("");
     }
 
@@ -53,6 +52,7 @@ public class RestServiceController {
 
     @RequestMapping("/newsPage")
     public NewsPage getNewsPage(@RequestBody PageRequest pageRequest) {
+        System.out.println(pageRequest);
         Model model = NewsFabrika.FABRIKA.createNews(pageRequest.getNewsName());
         return model == null ?
                 new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, null, null, null, null, null, null) :
