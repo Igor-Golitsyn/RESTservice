@@ -54,7 +54,7 @@ public class Gibdd implements Model {
     public NewsPage getNewsPage(PageRequest pageRequest) {
         Document document = getDocument(pageRequest.getUrl());
         if (document == null)
-            return new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new BufferedImage[0], "", "", "", "", "");
+            return new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new HashSet<>(), "", "", "", "", "");
         Element elementD = document.getElementById("content");
         Elements elements = elementD.getElementsByClass("news-detail");
         Elements fotos = elements.first().getElementsByClass("detail_pics");
@@ -63,57 +63,12 @@ public class Gibdd implements Model {
         elements.removeAll(fotos);
         String newsHeader = elements.get(0).text();
         String newsText = elements.get(2).text();
-        return new NewsPage(newsHeader, getImages(fotos, pageRequest.getSize()), newsText, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), "", "");
-    }
-
-    private BufferedImage[] getImages(Elements fotos, int wSize) {
-        CopyOnWriteArrayList<BufferedImage> images = new CopyOnWriteArrayList<>();
-        ArrayList<Thread> threads = new ArrayList<>();
-        Set<String> urls = new HashSet<>();
+        HashSet<String> urls = new HashSet<>();
         for (Element element : fotos) {
             urls.add(element.absUrl("href"));
         }
-        for (String url : urls) {
-            Thread thread = new Thread(new Runnable() {
-                String urlThread = url;
-
-                @Override
-                public void run() {
-                    BufferedImage image = null;
-                    try {
-                        URL url = new URL(urlThread);
-                        image = ImageIO.read(url);
-                        System.out.println(image.getWidth() + " ---" + image.getHeight());
-                    } catch (Exception e) {
-                    }
-                    if (image != null) {
-                        if (image.getHeight() > wSize || image.getWidth() > wSize) {
-                            double corrector = (double) (image.getHeight()) /(double) image.getWidth();
-                            int hSize = (int) (wSize * corrector);
-                            int type = image.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : image.getType();
-                            BufferedImage resizedImage = new BufferedImage(wSize, hSize, type);
-                            Graphics2D g = resizedImage.createGraphics();
-                            g.drawImage(image, 0, 0, wSize, hSize, null);
-                            g.dispose();
-                            images.add(resizedImage);
-                        } else {
-                            images.add(image);
-                        }
-                    }
-                }
-            });
-            threads.add(thread);
-            thread.start();
-        }
-        for (Thread tr : threads) {
-            try {
-                tr.join();
-            } catch (InterruptedException e) {
-            }
-        }
-        return images.toArray(new BufferedImage[images.size()]);
+        return new NewsPage(newsHeader, urls, newsText, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), "", "");
     }
-
     private Thread createThreadForScan(String url, CopyOnWriteArrayList<NewsItem> newsItems) {
         Thread thread = new Thread(() -> {
             Document page = getDocument(url);

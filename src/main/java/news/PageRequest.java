@@ -8,12 +8,13 @@ import java.io.Serializable;
 public class PageRequest implements Serializable {
     private String url;
     private String newsName;
-    private int size;
 
-    public PageRequest(String url, String newsName, int size) {
+    public PageRequest() {
+    }
+
+    public PageRequest(String url, String newsName) {
         this.url = url;
         this.newsName = newsName;
-        this.size = size;
     }
 
     public String getUrl() {
@@ -32,20 +33,11 @@ public class PageRequest implements Serializable {
         this.newsName = newsName;
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     @Override
     public String toString() {
         return "PageRequest{" +
                 "url='" + url + '\'' +
                 ", newsName='" + newsName + '\'' +
-                ", size=" + size +
                 '}';
     }
 }

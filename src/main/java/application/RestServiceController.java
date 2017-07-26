@@ -52,10 +52,14 @@ public class RestServiceController {
 
     @RequestMapping("/newsPage")
     public NewsPage getNewsPage(@RequestBody PageRequest pageRequest) {
-        System.out.println(pageRequest);
         Model model = NewsFabrika.FABRIKA.createNews(pageRequest.getNewsName());
         return model == null ?
                 new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, null, null, null, null, null, null) :
                 model.getNewsPage(pageRequest);
     }
+
+    /*@RequestMapping("/pageRequest")
+    public PageRequest getPageRequest() {
+        return new PageRequest("http://www.gibdd.ru/r/74/accident/3402350/", "gibdd");
+    }*/
 }

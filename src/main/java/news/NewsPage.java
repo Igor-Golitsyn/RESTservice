@@ -6,20 +6,23 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by golit on 03.07.2017.
  */
-public class NewsPage implements Serializable {
+public class NewsPage {
     private String name;
-    transient private BufferedImage[] images;
+    private HashSet<String> images;
     private String text;
     private String button1Text;
     private String button1Action;
     private String button2Text;
     private String button2Action;
 
-    public NewsPage(String name, BufferedImage[] images, String text, String button1Text, String button1Action, String button2Text, String button2Action) {
+    public NewsPage(String name, HashSet<String> images, String text, String button1Text, String button1Action, String button2Text, String button2Action) {
         this.name = name;
         this.images = images;
         this.text = text;
@@ -37,11 +40,11 @@ public class NewsPage implements Serializable {
         this.name = name;
     }
 
-    public BufferedImage[] getImages() {
+    public HashSet<String> getImages() {
         return images;
     }
 
-    public void setImages(BufferedImage[] images) {
+    public void setImages(HashSet<String> images) {
         this.images = images;
     }
 
@@ -89,29 +92,12 @@ public class NewsPage implements Serializable {
     public String toString() {
         return "NewsPage{" +
                 "name='" + name + '\'' +
-                ", fotos='" + images.length + '\'' +
+                ", images=" + images +
                 ", text='" + text + '\'' +
                 ", button1Text='" + button1Text + '\'' +
                 ", button1Action='" + button1Action + '\'' +
                 ", button2Text='" + button2Text + '\'' +
                 ", button2Action='" + button2Action + '\'' +
                 '}';
-    }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
-        out.writeInt(images.length); // how many images are serialized?
-        for (BufferedImage eachImage : images) {
-            ImageIO.write(eachImage, "jpg", out); // png is lossless
-        }
-    }
-
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        final int imageCount = in.readInt();
-        BufferedImage[] images = new BufferedImage[imageCount];
-        for (int i = 0; i < imageCount; i++) {
-            images[i] = ImageIO.read(in);
-        }
     }
 }
