@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -56,7 +57,7 @@ public class Mchs74 implements Model {
         newsItems.sort(new Comparator<NewsItem>() {
             @Override
             public int compare(NewsItem o1, NewsItem o2) {
-                return Long.compare(o2.getDate(),o1.getDate());
+                return Long.compare(o2.getDate(), o1.getDate());
             }
         });
         return newsItems.toArray(new NewsItem[newsItems.size()]);
@@ -64,7 +65,18 @@ public class Mchs74 implements Model {
 
     @Override
     public NewsPage getNewsPage(PageRequest pageRequest) {
-        return null;
+        Document document = getDocument(pageRequest.getUrl());
+        if (document == null)
+            return new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new HashSet<>(), "", "", "", "", "");
+        Element element = document.getElementsByClass("article clearfix").first();
+        String head = element.getElementsByTag("h1").first().text();
+        Elements imagesEl = element.getElementsByTag("img");
+        HashSet<String> setUrlImgs = new HashSet<>();
+        for (Element im:imagesEl){
+            setUrlImgs.add(im.absUrl("src"));
+        }
+        String text = element.getElementsByTag("p").text();
+        return new NewsPage(head,setUrlImgs,text,ConstantManager.OPENINBRAUZER,pageRequest.getUrl(),"","");
     }
 
     private Document getDocument(String url) {
@@ -107,11 +119,9 @@ public class Mchs74 implements Model {
         return items;
     }
 
-   /* public static void main(String[] args) {
-        NewsItem[] newsItems = new Mchs74().getItems("");
-        for (NewsItem item:newsItems){
-            System.out.println("****************************");
-            System.out.println(item);
-        }
-    }*/
+    public static void main(String[] args) {
+        PageRequest pageRequest = new PageRequest("http://74.mchs.gov.ru/operationalpage/operational/item/5612359/", "gibdd");
+        NewsPage newsPage = new Mchs74().getNewsPage(pageRequest);
+        System.out.println(newsPage);
+    }
 }
