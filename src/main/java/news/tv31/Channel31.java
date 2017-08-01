@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  * Created by golit on 13.06.2017.
@@ -26,7 +27,7 @@ public class Channel31 implements Model {
 
     @Override
     public NewsItem[] getItems(String searchWord) {
-        Document document = getDocument();
+        Document document = getDocument(ConstantManager.TV31NEWSURL);
         if (document == null) return new NewsItem[0];
         ArrayList<NewsItem> newsItems = new ArrayList<>();
         Elements arhive = document.getElementsByClass("archive row-fluid");
@@ -34,7 +35,6 @@ public class Channel31 implements Model {
         for (Element element : news) {
             String name = element.getElementsByClass("title").first().text();
             String url = element.getElementsByClass("title").first().child(0).absUrl("href");
-            //DateFormat FORMAT = new SimpleDateFormat("dd.MM.yy hh:mm");
             Date date;
             try {
                 synchronized (FORMAT) {
@@ -57,11 +57,22 @@ public class Channel31 implements Model {
 
     @Override
     public NewsPage getNewsPage(PageRequest pageRequest) {
-        return null;
+        Document document = getDocument(pageRequest.getUrl());
+        if (document == null)
+            return new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new HashSet<>(), "", "", "", "", "");
+        Element element = document.getElementsByClass("text article_text").first();
+        String head = element.getElementsByTag("p").first().text();
+        element.getElementsByTag("p").first().remove();
+        Elements imagesEl = element.getElementsByTag("img");
+        HashSet<String> setUrlImgs = new HashSet<>();
+        for (Element im:imagesEl){
+            setUrlImgs.add(im.absUrl("src"));
+        }
+        String text = element.text();
+        return new NewsPage(head,setUrlImgs,text,ConstantManager.OPENINBRAUZER,pageRequest.getUrl(),"","");
     }
 
-    private Document getDocument() {
-        String url = ConstantManager.TV31NEWSURL;
+    private Document getDocument(String url) {
         Document document;
         try {
             document = Jsoup.connect(url).get();
@@ -71,6 +82,8 @@ public class Channel31 implements Model {
         return document;
     }
     /*public static void main(String[] args) {
-        new Channel31().getItems("");
+        PageRequest pageRequest = new PageRequest("https://31tv.ru/novosti/yuzhnouralec-otkazalsya-oplachivat-shtraf--nazyvaya-sebya-grazhdaninom-sssr-i-zhivorozhdennym-muzhchinoy-1-8-2017-143020.html", "");
+        NewsPage newsPage=new Channel31().getNewsPage(pageRequest);
+        System.out.println(newsPage);
     }*/
 }
