@@ -119,9 +119,9 @@ public class Mchs74 implements Model {
         return items;
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         PageRequest pageRequest = new PageRequest("http://74.mchs.gov.ru/operationalpage/operational/item/5612359/", "gibdd");
         NewsPage newsPage = new Mchs74().getNewsPage(pageRequest);
         System.out.println(newsPage);
-    }
+    }*/
 }
