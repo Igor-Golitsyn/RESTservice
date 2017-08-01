@@ -203,11 +203,11 @@ public class RuTorSearch implements Model {
         return newsItems.toArray(new NewsItem[newsItems.size()]);
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         PageRequest pageRequest = new PageRequest("http://fast-bit.org/torrent/579346/warface-1.08.17-2012-pc-online-only", "gidbb");
         NewsPage newsPage = new RuTorSearch().getNewsPage(pageRequest);
         System.out.println(newsPage);
-    }
+    }*/
 }
 
 
