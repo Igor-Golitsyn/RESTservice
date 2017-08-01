@@ -10,4 +10,5 @@ public interface ConstantManager {
     String MCHSOPERATIONAL = "http://74.mchs.gov.ru/operationalpage/operational";
     String ERRORDOWNLOADPAGE = "Ошибка загрузки";
     String OPENINBRAUZER = "Открыть в браузере";
+    String SAVELINK = "Сохранить torrent ссылку";
  }

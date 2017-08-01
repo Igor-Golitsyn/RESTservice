@@ -7,6 +7,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document;
 import news.Model;
+import org.jsoup.select.Elements;
+import utils.ConstantManager;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,7 +40,41 @@ public class RuTorSearch implements Model {
 
     @Override
     public NewsPage getNewsPage(PageRequest pageRequest) {
-        return null;
+        Document document = getDocument(pageRequest.getUrl());
+        if (document == null)
+            return new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new HashSet<>(), "", "", "", "", "");
+        Element details = document.getElementById("details");
+        Element download = document.getElementById("download");
+        String head = document.getElementsByTag("h1").first().text();
+        String text = details.text().replaceAll("<br />", "");
+        Elements images = details.getElementsByTag("img");
+        HashSet<String> setUrls = new HashSet<>();
+        Iterator<Element> iterator = images.iterator();
+        boolean firstImg = true;
+        while (iterator.hasNext()) {
+            if (firstImg) {
+                iterator.next();
+                firstImg = false;
+            }
+            setUrls.add(iterator.next().absUrl("src"));
+        }
+        download.children().first().remove();
+        String torrent = "";
+        for (Element el : download.children()) {
+            torrent = el.absUrl("href");
+            if (!torrent.isEmpty()) break;
+        }
+        return new NewsPage(head,setUrls,text,ConstantManager.OPENINBRAUZER,pageRequest.getUrl(),ConstantManager.SAVELINK,torrent);
+    }
+
+    private Document getDocument(String url) {
+        Document document;
+        try {
+            document = Jsoup.connect(url).get();
+        } catch (IOException e) {
+            document = null;
+        }
+        return document;
     }
 
     /**
@@ -51,7 +87,7 @@ public class RuTorSearch implements Model {
         newsItems.sort(new Comparator<NewsItem>() {
             @Override
             public int compare(NewsItem o1, NewsItem o2) {
-                return Long.compare(o2.getDate(),o1.getDate());
+                return Long.compare(o2.getDate(), o1.getDate());
             }
         });
         return newsItems.toArray(new NewsItem[newsItems.size()]);
@@ -167,14 +203,11 @@ public class RuTorSearch implements Model {
         return newsItems.toArray(new NewsItem[newsItems.size()]);
     }
 
-    /*public static void main(String[] args) {
-        RuTorSearch ruTorSearch = new RuTorSearch();
-        NewsItem item[] = ruTorSearch.getItems("Дредд");
-        for (NewsItem i : item) {
-            System.out.println(i);
-        }
-        System.out.println(item.length);
-    }*/
+    public static void main(String[] args) {
+        PageRequest pageRequest = new PageRequest("http://fast-bit.org/torrent/579346/warface-1.08.17-2012-pc-online-only", "gidbb");
+        NewsPage newsPage = new RuTorSearch().getNewsPage(pageRequest);
+        System.out.println(newsPage);
+    }
 }
 
 

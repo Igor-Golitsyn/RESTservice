@@ -6,7 +6,8 @@ package news.ruTor;
 public enum RutorMirrors {
     rutor2("http://rutor.info"),
     rutor1("http://rus-film.org"),
-    rutor3("http://rutor.is");
+    rutor3("http://rutor.is"),
+    rutor4("http://fast-bit.org");
 
     private final String name;
 
