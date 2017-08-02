@@ -23,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by golit on 28.06.2017.
  */
-public class Mchs74 implements Model {
+public class Mchs74 implements Model  {
     private final DateFormat FORMAT = new SimpleDateFormat("dd MMMMM");
     private final DateFormat FORMATCURRENTDAY = new SimpleDateFormat("HH:mm");
 
@@ -119,9 +119,10 @@ public class Mchs74 implements Model {
         return items;
     }
 
-   /* public static void main(String[] args) {
+    public static void main(String[] args) {
+        System.out.println(new Mchs74().getItems(""));
         PageRequest pageRequest = new PageRequest("http://74.mchs.gov.ru/operationalpage/operational/item/5612359/", "gibdd");
         NewsPage newsPage = new Mchs74().getNewsPage(pageRequest);
         System.out.println(newsPage);
-    }*/
+    }
 }

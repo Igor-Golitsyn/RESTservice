@@ -18,7 +18,11 @@ public class RestServiceController {
     @RequestMapping("/torrent")
     public NewsItem[] getTorrent(@RequestParam(value = "word", required = false, defaultValue = "") String word) {
         Model model = NewsFabrika.FABRIKA.createNews("torrent");
-        return model == null ? new NewsItem[0] : model.getItems(word);
+        try {
+            return model == null ? new NewsItem[0] : model.getItems(word);
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
     }
 
     @RequestMapping("/newsList")
@@ -35,27 +39,43 @@ public class RestServiceController {
     @RequestMapping("/gibdd")
     public NewsItem[] getGibdd() {
         Model model = NewsFabrika.FABRIKA.createNews("gibdd");
-        return model == null ? new NewsItem[0] : model.getItems("");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
     }
 
     @RequestMapping("/31tv")
     public NewsItem[] get31tv() {
         Model model = NewsFabrika.FABRIKA.createNews("31tv");
-        return model == null ? new NewsItem[0] : model.getItems("");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
     }
 
     @RequestMapping("/mchs74")
     public NewsItem[] getMchsOperational() {
         Model model = NewsFabrika.FABRIKA.createNews("mchs74");
-        return model == null ? new NewsItem[0] : model.getItems("");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
     }
 
     @RequestMapping("/newsPage")
     public NewsPage getNewsPage(@RequestBody PageRequest pageRequest) {
         Model model = NewsFabrika.FABRIKA.createNews(pageRequest.getNewsName());
-        return model == null ?
-                new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, null, null, null, null, null, null) :
-                model.getNewsPage(pageRequest);
+        try {
+            return model == null ?
+                    new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, null, null, null, null, null, null) :
+                    model.getNewsPage(pageRequest);
+        } catch (Exception e) {
+            return new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, null, null, null, null, null, null);
+        }
     }
 
     /*@RequestMapping("/pageRequest")
