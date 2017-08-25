@@ -20,9 +20,13 @@ public enum NewsListController {
         TypedQuery<NewsListItem> namedQuery = em.createNamedQuery("NewsListItem.getAll", NewsListItem.class);
         List<NewsListItem> newsListItems = namedQuery.getResultList();
         em.getTransaction().commit();
+        NewsListItem[] items = new NewsListItem[newsListItems.size()];
+        for (int i = 0; i < items.length; i++) {
+            if (newsListItems.get(i).isShowNewsList()) items[i] = newsListItems.get(i);
+        }
         // em.close();
         // factory.close();
-        return newsListItems.toArray(new NewsListItem[newsListItems.size()]);
+        return items;
     }
 
     public NewsListItem[] writeToBase(NewsListItem newsListItem) {

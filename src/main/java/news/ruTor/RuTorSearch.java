@@ -46,17 +46,16 @@ public class RuTorSearch implements Model {
         Element details = document.getElementById("details");
         Element download = document.getElementById("download");
         String head = document.getElementsByTag("h1").first().text();
-        String text = details.text().replaceAll("<br />", "");
+        //String text = details.text().replaceAll("<br />", "");
+        String text = getText(details);
         Elements images = details.getElementsByTag("img");
         HashSet<String> setUrls = new HashSet<>();
         Iterator<Element> iterator = images.iterator();
-        boolean firstImg = true;
         while (iterator.hasNext()) {
-            if (firstImg) {
-                iterator.next();
-                firstImg = false;
+            String url = iterator.next().absUrl("src");
+            for (RuTorPic pic : RuTorPic.values()) {
+                if (url.contains(pic.toString().toLowerCase()) && !url.endsWith("gif")) setUrls.add(url);
             }
-            setUrls.add(iterator.next().absUrl("src"));
         }
         download.children().first().remove();
         String torrent = "";
@@ -64,7 +63,7 @@ public class RuTorSearch implements Model {
             torrent = el.absUrl("href");
             if (!torrent.isEmpty()) break;
         }
-        return new NewsPage(head,setUrls,text,ConstantManager.OPENINBRAUZER,pageRequest.getUrl(),ConstantManager.SAVELINK,torrent);
+        return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.SAVELINK, torrent);
     }
 
     private Document getDocument(String url) {
@@ -127,8 +126,8 @@ public class RuTorSearch implements Model {
             String link = element.child(1).child(2).absUrl("href");
             String seed = element.getElementsByClass("green").get(0).text();
             String stringDate = element.child(0).text();
+
             stringDate = element.child(0).text().replaceAll(String.valueOf(stringDate.charAt(2)), " ");
-            //DateFormat FORMAT = new SimpleDateFormat("dd MMM yy");
             Date date;
             try {
                 synchronized (FORMAT) {
@@ -143,6 +142,50 @@ public class RuTorSearch implements Model {
         }
         return newsItems;
     }
+
+    private String getText(Element details) {
+        List<Element> elementList = details.getElementsByTag("b");
+        Map<String, String> data = new HashMap<>();
+        StringBuilder rezult = new StringBuilder();
+        for (Element element : elementList) {
+            try {
+                String key = element.text();
+                String value = "";
+                String[] parts = details.toString().split(element.toString());
+                if (parts.length > 1) {
+                    String[] subPart = parts[1].split("\\<br\\>", 2);
+                    value = subPart[0];
+                }
+                if (value == null || value.isEmpty() || value.contains("http") || value.contains("href")) {
+                    continue;
+                }
+                if (key != null) data.put(key, clearFromTag(value));
+            } catch (Exception e) {
+            }
+        }
+        List<String> set = new ArrayList<>(data.keySet());
+        Collections.sort(set);
+        for (String s : set) {
+            String val = data.get(s).trim();
+            if (!val.isEmpty()) rezult = rezult.append(s + val + "\n");
+        }
+        return rezult.toString();
+    }
+
+    private String clearFromTag(String string) {
+        string = string.trim();
+        if (!string.contains("<")) return string;
+        if (string.startsWith("<") && string.endsWith(">")) return "";
+        while (string.contains("<")) {
+            String[] parts = string.split("\\<", 2);
+            if (parts.length > 1) {
+                String[] subParts = parts[1].split("\\>", 2);
+                string = parts[0] + subParts[1];
+            }
+        }
+        return string;
+    }
+
 
     /**
      * Возвращает запрашиваемую страницу по номеру
@@ -204,7 +247,7 @@ public class RuTorSearch implements Model {
     }
 
    /* public static void main(String[] args) {
-        PageRequest pageRequest = new PageRequest("http://fast-bit.org/torrent/579346/warface-1.08.17-2012-pc-online-only", "gidbb");
+        PageRequest pageRequest = new PageRequest("http://rutor.info/torrent/583336/shadow-warrior-2-deluxe-edition-v-1.1.11.1-2016-pc-licenzija", "gidbb");
         NewsPage newsPage = new RuTorSearch().getNewsPage(pageRequest);
         System.out.println(newsPage);
     }*/
