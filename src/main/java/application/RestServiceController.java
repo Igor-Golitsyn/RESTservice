@@ -16,10 +16,20 @@ import utils.ConstantManager;
 public class RestServiceController {
 
     @RequestMapping("/torrent")
-    public NewsItem[] getTorrent(@RequestParam(value = "word", required = false, defaultValue = "") String word) {
+    public NewsItem[] getTorrent() {
         Model model = NewsFabrika.FABRIKA.createNews("torrent");
         try {
-            return model == null ? new NewsItem[0] : model.getItems(word);
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
+    }
+
+    @RequestMapping("/torrentSearch")
+    public NewsItem[] findTorrent(@RequestBody PageRequest pageRequest) {
+        Model model = NewsFabrika.FABRIKA.createNews("torrent");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems(pageRequest.getUrl());
         } catch (Exception e) {
             return new NewsItem[0];
         }
