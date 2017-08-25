@@ -1,9 +1,7 @@
 package newsList;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,13 +18,13 @@ public enum NewsListController {
         TypedQuery<NewsListItem> namedQuery = em.createNamedQuery("NewsListItem.getAll", NewsListItem.class);
         List<NewsListItem> newsListItems = namedQuery.getResultList();
         em.getTransaction().commit();
-        NewsListItem[] items = new NewsListItem[newsListItems.size()];
-        for (int i = 0; i < items.length; i++) {
-            if (newsListItems.get(i).isShowNewsList()) items[i] = newsListItems.get(i);
+        ArrayList<NewsListItem> clearList=new ArrayList<>();
+        for (NewsListItem item:newsListItems){
+            if (item.isShowNewsList()) clearList.add(item);
         }
         // em.close();
         // factory.close();
-        return items;
+        return clearList.toArray(new NewsListItem[clearList.size()]);
     }
 
     public NewsListItem[] writeToBase(NewsListItem newsListItem) {
