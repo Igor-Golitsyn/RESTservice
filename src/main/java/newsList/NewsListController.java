@@ -24,6 +24,7 @@ public enum NewsListController {
         }
         // em.close();
         // factory.close();
+
         return clearList.toArray(new NewsListItem[clearList.size()]);
     }
 
