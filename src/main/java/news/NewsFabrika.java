@@ -2,6 +2,7 @@ package news;
 
 import news.gibdd.Gibdd;
 import news.mchs.Mchs74;
+import news.ru74.Chelyabinsk74ru;
 import news.ruTor.RuTorSearch;
 import news.tv31.Channel31;
 
@@ -21,6 +22,8 @@ public enum  NewsFabrika {
                 return new Mchs74();
             case "torrent":
                 return new RuTorSearch();
+            case "Chelyabinsk74ru":
+                return new Chelyabinsk74ru();
             default:
                 return null;
         }

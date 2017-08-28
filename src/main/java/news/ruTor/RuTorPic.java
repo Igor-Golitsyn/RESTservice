@@ -10,7 +10,8 @@ public enum RuTorPic {
     pic7("Scrin.org"),
     pic8("Imageshost.ru"),
     pic9("Imageban.ru"),
-    pic10("Lostpix.com");
+    pic10("Lostpix.com"),
+    pic11("photo7ya.ru");
 
     private final String name;
 

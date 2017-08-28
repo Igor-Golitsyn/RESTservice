@@ -88,8 +88,15 @@ public class RestServiceController {
         }
     }
 
-    /*@RequestMapping("/pageRequest")
-    public PageRequest getPageRequest() {
-        return new PageRequest("http://www.gibdd.ru/r/74/accident/3402350/", "gibdd");
-    }*/
+    @RequestMapping("/Chelyabinsk74ru")
+    public NewsItem[] getChelyabinsk74ru() {
+        Model model = NewsFabrika.FABRIKA.createNews("Chelyabinsk74ru");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
+    }
+
+
 }

@@ -24,6 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class RuTorSearch implements Model {
     private final DateFormat FORMAT = new SimpleDateFormat("dd MMM yy");
+    private final int SIZE_OF_REZULT = 500;
 
     /**
      * Возвращает массив раздач
@@ -35,7 +36,15 @@ public class RuTorSearch implements Model {
     public NewsItem[] getItems(String word) {
         word = word.trim();
         word = word.replaceAll(" ", "%20");
-        return word.length() > 2 ? getItemsFromWord(word) : getSartItems();
+        NewsItem[] rezult = word.length() > 2 ? getItemsFromWord(word) : getSartItems();
+        if (rezult.length > SIZE_OF_REZULT) {
+            NewsItem[] rezult500 = new NewsItem[SIZE_OF_REZULT];
+            for (int i = 0; i < SIZE_OF_REZULT; i++) {
+                rezult500[i] = rezult[i];
+            }
+            rezult = rezult500;
+        }
+        return rezult;
     }
 
     @Override
