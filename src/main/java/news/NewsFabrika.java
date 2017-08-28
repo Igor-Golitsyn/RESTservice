@@ -1,5 +1,6 @@
 package news;
 
+import news.bashOrg.BashOrg;
 import news.gibdd.Gibdd;
 import news.mchs.Mchs74;
 import news.ru74.Chelyabinsk74ru;
@@ -24,6 +25,8 @@ public enum  NewsFabrika {
                 return new RuTorSearch();
             case "Chelyabinsk74ru":
                 return new Chelyabinsk74ru();
+            case "BashOrg":
+                return new BashOrg();
             default:
                 return null;
         }

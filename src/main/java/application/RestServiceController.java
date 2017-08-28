@@ -98,5 +98,14 @@ public class RestServiceController {
         }
     }
 
+    @RequestMapping("/BashOrg")
+    public NewsItem[] getBashOrg() {
+        Model model = NewsFabrika.FABRIKA.createNews("BashOrg");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
+    }
 
 }
