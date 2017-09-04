@@ -256,7 +256,7 @@ public class RuTorSearch implements Model {
     }
 
    /* public static void main(String[] args) {
-        PageRequest pageRequest = new PageRequest("http://rutor.info/torrent/583336/shadow-warrior-2-deluxe-edition-v-1.1.11.1-2016-pc-licenzija", "gidbb");
+        PageRequest pageRequest = new PageRequest("http://rutor.info/torrent/582886/poslednij-korabl_the-last-ship-04h01-03-iz-10-2017-webrip-baibako", "gidbb");
         NewsPage newsPage = new RuTorSearch().getNewsPage(pageRequest);
         System.out.println(newsPage);
     }*/
