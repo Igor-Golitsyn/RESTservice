@@ -105,7 +105,7 @@ public class Gibdd implements Model {
     private Document getDocument(String url) {
         Document document;
         try {
-            document = Jsoup.connect(url).timeout(10000).get();
+            document = Jsoup.connect(url).timeout(60000).get();
         } catch (IOException e) {
             document = null;
         }

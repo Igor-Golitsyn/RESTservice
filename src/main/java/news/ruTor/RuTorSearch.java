@@ -78,7 +78,7 @@ public class RuTorSearch implements Model {
     private Document getDocument(String url) {
         Document document;
         try {
-            document = Jsoup.connect(url).get();
+            document = Jsoup.connect(url).timeout(60000).get();
         } catch (IOException e) {
             document = null;
         }
