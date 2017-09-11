@@ -6,6 +6,7 @@ import news.mchs.Mchs74;
 import news.ru74.Chelyabinsk74ru;
 import news.ruTor.RuTorSearch;
 import news.tv31.Channel31;
+import news.vodaUUru.VodaUU;
 
 /**
  * Created by golit on 03.07.2017.
@@ -27,6 +28,8 @@ public enum  NewsFabrika {
                 return new Chelyabinsk74ru();
             case "BashOrg":
                 return new BashOrg();
+            case "voda":
+                return new VodaUU();
             default:
                 return null;
         }

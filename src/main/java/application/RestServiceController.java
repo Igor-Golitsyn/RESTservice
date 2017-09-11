@@ -24,10 +24,30 @@ public class RestServiceController {
             return new NewsItem[0];
         }
     }
-
+    //Если сервис с поиском добавляем поиск (имяСервиса+Search)
     @RequestMapping("/torrentSearch")
     public NewsItem[] findTorrent(@RequestBody PageRequest pageRequest) {
         Model model = NewsFabrika.FABRIKA.createNews("torrent");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems(pageRequest.getUrl());
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
+    }
+
+    @RequestMapping("/voda")
+    public NewsItem[] getVoda() {
+        Model model = NewsFabrika.FABRIKA.createNews("voda");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
+    }
+
+    @RequestMapping("/vodaSearch")
+    public NewsItem[] findVoda(@RequestBody PageRequest pageRequest) {
+        Model model = NewsFabrika.FABRIKA.createNews("voda");
         try {
             return model == null ? new NewsItem[0] : model.getItems(pageRequest.getUrl());
         } catch (Exception e) {

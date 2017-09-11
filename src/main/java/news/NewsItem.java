@@ -53,7 +53,7 @@ public class NewsItem {
                 ", link='" + link + '\'' +
                 ", seeders=" + seeders +
                 ", size='" + size + '\'' +
-                ", date=" + date +
+                ", date=" + new Date(date) +
                 '}';
     }
 }

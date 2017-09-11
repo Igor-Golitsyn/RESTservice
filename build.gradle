@@ -32,6 +32,7 @@ dependencies {
     compile 'org.hibernate:hibernate-core:5.2.3.Final'
     compile ('org.hibernate:hibernate-entitymanager:5.2.3.Final')
     compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+    compile 'com.google.code.gson:gson:2.8.1'
 
     /*****************************************************************/
     /*Для деплоя на WildFly поможет одна из библиотек*/

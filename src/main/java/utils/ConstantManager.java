@@ -4,6 +4,7 @@ package utils;
  * Created by golit on 05.06.2017.
  */
 public interface ConstantManager {
+    String VODA_UU_RU = "http://voda.uu.ru/otklyucheniya/";
     String TV31NEWSURL = "https://31tv.ru/novosti";
     String CHELYABINSK74RU = "http://chelyabinsk.74.ru/text/newsline/?p=";
     String BASHORG = "http://www.bashorg.org/";

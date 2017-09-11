@@ -81,6 +81,7 @@
           <element id="library" level="project" name="Gradle: org.bouncycastle:bctsp-jdk14:1.38" />
           <element id="library" level="project" name="Gradle: org.bouncycastle:bcprov-jdk14:1.38" />
           <element id="library" level="project" name="Gradle: org.bouncycastle:bcmail-jdk14:1.38" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.1/2a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0/gson-2.8.1.jar" />
         </element>
       </element>
     </root>
