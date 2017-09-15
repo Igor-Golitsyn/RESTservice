@@ -9,7 +9,7 @@ public class DataVoda  {
 
     @SerializedName("date1")
     @Expose
-    public List<Date1> date1 = null;
+    public  List<Date1> date1 = null;
     @SerializedName("date2")
     @Expose
     public List<Date2> date2 = null;
