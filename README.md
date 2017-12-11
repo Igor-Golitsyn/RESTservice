@@ -1,6 +1,6 @@
 # RESTservice
 Использован Spring, MySQL, Hibernate, Gradle, JSoup.
-работают:/n
+работают:
 http://polus.ddns.net/RESTservice/torrent ; 
 http://polus.ddns.net/RESTservice/31tv ;
 http://polus.ddns.net/RESTservice/newsList ;
