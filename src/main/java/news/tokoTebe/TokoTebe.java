@@ -48,7 +48,7 @@ public class TokoTebe implements Model {
                 newLine = clearLine(newLine);
                 newLine = newLine.replace(newLine.substring(newLine.indexOf('↑'), newLine.indexOf('↓') + 1), "");
                 newLine = newLine.replace("рейтинг:", "");
-                newsItems.add(new NewsItem(newLine,null,0,null,date));
+                newsItems.add(new NewsItem(newLine,ConstantManager.TOKO_TEBE,0,"",date));
             }
         }
         return newsItems;
