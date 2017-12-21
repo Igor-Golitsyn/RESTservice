@@ -14,4 +14,5 @@ public interface ConstantManager {
     String ERRORDOWNLOADPAGE = "Ошибка загрузки";
     String OPENINBRAUZER = "Открыть в браузере";
     String SAVELINK = "Сохранить torrent ссылку";
+    String TOKO_TEBE = "http://toko-tebe.ru/day/new-year/good";
  }

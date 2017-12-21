@@ -45,6 +45,16 @@ public class RestServiceController {
         }
     }
 
+    @RequestMapping("/tokoTebe")
+    public NewsItem[] getTokoTebe() {
+        Model model = NewsFabrika.FABRIKA.createNews("tokoTebe");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
+    }
+
     @RequestMapping("/vodaSearch")
     public NewsItem[] findVoda(@RequestBody PageRequest pageRequest) {
         Model model = NewsFabrika.FABRIKA.createNews("voda");

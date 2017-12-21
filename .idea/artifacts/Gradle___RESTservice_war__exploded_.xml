@@ -11,6 +11,7 @@
         <element id="file-copy" path="$PROJECT_DIR$/build/libs/exploded/RESTservice.war/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="RESTservice_main/web/Web Gradle : RESTservice.war" />
+      <element id="javaee-facet-resources" facet="RESTservice_main/web/Web Gradle : RESTservice.war" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="RESTservice_main" />
@@ -84,7 +85,6 @@
           <element id="library" level="project" name="Gradle: org.bouncycastle:bcmail-jdk14:1.38" />
         </element>
       </element>
-      <element id="javaee-facet-resources" facet="RESTservice_main/web/Web Gradle : RESTservice.war" />
     </root>
   </artifact>
 </component>

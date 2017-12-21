@@ -5,6 +5,7 @@ import news.gibdd.Gibdd;
 import news.mchs.Mchs74;
 import news.ru74.Chelyabinsk74ru;
 import news.ruTor.RuTorSearch;
+import news.tokoTebe.TokoTebe;
 import news.tv31.Channel31;
 import news.vodaUUru.VodaUU;
 
@@ -30,6 +31,8 @@ public enum  NewsFabrika {
                 return new BashOrg();
             case "voda":
                 return new VodaUU();
+            case "tokoTebe":
+                return new TokoTebe();
             default:
                 return null;
         }
