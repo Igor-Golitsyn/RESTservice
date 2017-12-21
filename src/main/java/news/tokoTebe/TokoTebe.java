@@ -88,7 +88,7 @@ public class TokoTebe implements Model {
         return document;
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         try {
            NewsItem[] newsItems= new TokoTebe().getItems("");
            for (NewsItem item:newsItems){
@@ -97,5 +97,5 @@ public class TokoTebe implements Model {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
