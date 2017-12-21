@@ -13,6 +13,7 @@ import utils.ConstantManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 public class TokoTebe implements Model {
     @Override
@@ -34,7 +35,9 @@ public class TokoTebe implements Model {
 
     @Override
     public NewsPage getNewsPage(PageRequest pageRequest) throws Exception {
-        return null;
+        HashSet<String> hashSet = new HashSet<>();
+        hashSet.add("http://toko-tebe.ru/i/art/laugh/laugh_11.jpg");
+        return new NewsPage("С Новым Годом!!!",hashSet,"",ConstantManager.OPENINBRAUZER,ConstantManager.TOKO_TEBE,"","");
     }
 
     private ArrayList<NewsItem> getItemsFromDocument(Document document) {
