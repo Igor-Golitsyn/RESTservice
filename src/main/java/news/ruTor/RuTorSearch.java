@@ -204,18 +204,18 @@ public class RuTorSearch implements Model {
      * @return Document
      */
     private Document getPage(String searchString, int page) {
+        Document document = new Document("");
         for (RutorMirrors mirror : RutorMirrors.values()) {
             String urlFormat = mirror.toString() + "/search/%d/0/000/0/%s";
             String url = URI.create(String.format(Locale.getDefault(), urlFormat, page, searchString)).toASCIIString();
-            Document document;
             try {
                 document = Jsoup.connect(url).get();
             } catch (IOException e) {
-                document = new Document("");
+                continue;
             }
             return document;
         }
-        return new Document("");
+        return document;
     }
 
     /**
@@ -256,9 +256,13 @@ public class RuTorSearch implements Model {
     }
 
    /* public static void main(String[] args) {
-        PageRequest pageRequest = new PageRequest("http://rutor.info/torrent/582886/poslednij-korabl_the-last-ship-04h01-03-iz-10-2017-webrip-baibako", "gidbb");
-        NewsPage newsPage = new RuTorSearch().getNewsPage(pageRequest);
-        System.out.println(newsPage);
+        //PageRequest pageRequest = new PageRequest("http://rutor.info/torrent/612892/most_bron/broen-04x01-07-iz-08-2018-hdtvrip-720p-coldfilm", "gidbb");
+        RuTorSearch ruTorSearch = new RuTorSearch();
+        NewsItem[] items = ruTorSearch.getItems("Dredd");
+        if (items.length>0)
+        System.out.println(items[items.length-1]);
+        System.out.println("error");
+        //System.out.println(newsPage);
     }*/
 }
 
