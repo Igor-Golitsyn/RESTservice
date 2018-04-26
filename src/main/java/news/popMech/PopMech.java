@@ -41,7 +41,7 @@ public class PopMech implements Model {
         Document document = getDocument(pageRequest.getUrl());
         if (document == null)
             return new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new HashSet<>(), "", "", "", "", "");
-        String titleDoc = document.head().getElementsByTag("title").first().text().replaceAll("\\p{Cntrl}", " ");
+        String titleDoc = document.head().getElementsByTag("title").first().text();
         Elements elements = document.getElementsByClass("text-page");
         String text = "";
         for (Element element : elements) {
@@ -50,14 +50,7 @@ public class PopMech implements Model {
         Elements picElememts = document.getElementsByClass("img");
         HashSet<String> images = new HashSet<>();
         for (Element el : picElememts) {
-            String picName = el.child(0).attr("alt").replaceAll("\\p{Cntrl}", " ");
-            boolean stringsEqual = true;
-            for (int i = 0; i < picName.length(); i++) {
-                if (Character.isAlphabetic(picName.charAt(i))){
-                    if (Character.compare(picName.charAt(i), titleDoc.charAt(i))!=0) stringsEqual=false;
-                }
-            }
-            if (stringsEqual) images.add(el.child(0).absUrl("src"));
+            images.add(el.child(0).absUrl("src"));
         }
         NewsPage newsPage = new NewsPage(titleDoc.replaceAll("\\|","\n"), images, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), "", "");
         return newsPage;
@@ -79,13 +72,13 @@ public class PopMech implements Model {
         try {
             newsItems = popMech.getItems("");
             for (NewsItem item : newsItems) {
-                System.out.println(item);
+                //System.out.println(item);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            NewsPage newsPage = popMech.getNewsPage(new PageRequest(newsItems[7].getLink(), ""));
+            NewsPage newsPage = popMech.getNewsPage(new PageRequest("https://www.popmech.ru/science/news-421132-samaya-bolshaya-karta-nashey-galaktiki-za-vsyu-istoriyu-chelovechestva/",""));
             System.out.println(newsPage);
         } catch (Exception e) {
             e.printStackTrace();

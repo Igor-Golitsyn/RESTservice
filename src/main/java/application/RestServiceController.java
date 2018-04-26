@@ -116,6 +116,16 @@ public class RestServiceController {
         }
     }
 
+    @RequestMapping("/cosmo")
+    public NewsItem[] getCosmo() {
+        Model model = NewsFabrika.FABRIKA.createNews("cosmo");
+        try {
+            return model == null ? new NewsItem[0] : model.getItems("");
+        } catch (Exception e) {
+            return new NewsItem[0];
+        }
+    }
+
     @RequestMapping("/newsPage")
     public NewsPage getNewsPage(@RequestBody PageRequest pageRequest) {
         Model model = NewsFabrika.FABRIKA.createNews(pageRequest.getNewsName());

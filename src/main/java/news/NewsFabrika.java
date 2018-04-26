@@ -1,6 +1,7 @@
 package news;
 
 import news.bashOrg.BashOrg;
+import news.cosmo.Cosmo;
 import news.gibdd.Gibdd;
 import news.mchs.Mchs74;
 import news.popMech.PopMech;
@@ -36,6 +37,8 @@ public enum  NewsFabrika {
                 return new TokoTebe();
             case "popMech":
                 return new PopMech();
+            case "cosmo":
+                return new Cosmo();
             default:
                 return null;
         }
