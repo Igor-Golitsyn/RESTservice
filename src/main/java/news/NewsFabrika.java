@@ -3,6 +3,7 @@ package news;
 import news.bashOrg.BashOrg;
 import news.gibdd.Gibdd;
 import news.mchs.Mchs74;
+import news.popMech.PopMech;
 import news.ru74.Chelyabinsk74ru;
 import news.ruTor.RuTorSearch;
 import news.tokoTebe.TokoTebe;
@@ -33,6 +34,8 @@ public enum  NewsFabrika {
                 return new VodaUU();
             case "tokoTebe":
                 return new TokoTebe();
+            case "popMech":
+                return new PopMech();
             default:
                 return null;
         }
