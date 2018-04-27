@@ -14,6 +14,7 @@ public interface ConstantManager {
     String GIBDDPAGE2 = "http://www.gibdd.ru/r/74/accident/?PAGEN_1=2";
     String POPMECH = "https://www.popmech.ru/news";
     String COSMO = "https://www.cosmo.ru/news";
+    String VESTI = "https://www.vesti.ru/news";
     String MCHSOPERATIONAL = "http://74.mchs.gov.ru/operationalpage/operational";
     String ERRORDOWNLOADPAGE = "Ошибка загрузки";
     String OPENINBRAUZER = "Открыть в браузере";
