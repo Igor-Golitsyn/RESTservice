@@ -55,11 +55,11 @@ public class Chelyabinsk74ru implements Model {
     }
 
     private CopyOnWriteArrayList<NewsItem> getNewsItemsFromPage(int num) {
+        CopyOnWriteArrayList<NewsItem> list = new CopyOnWriteArrayList<>();
         Document document = getDocument(ConstantManager.CHELYABINSK74RU + num);
-        if (document == null) return new CopyOnWriteArrayList();
+        if (document == null) return list;
         Elements elements = document.getElementsByClass("news_title_tape");
         Iterator<Element> itemIterator = elements.iterator();
-        CopyOnWriteArrayList<NewsItem> list = new CopyOnWriteArrayList();
         Set<Thread> threadSet = new HashSet<>();
         while (itemIterator.hasNext()) {
             Element element = itemIterator.next().getElementsByClass("bl_title").first().children().first();

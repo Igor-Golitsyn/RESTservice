@@ -10,6 +10,7 @@ import news.Model;
 import org.jsoup.select.Elements;
 import utils.ConstantManager;
 
+import javax.swing.text.html.HTML;
 import java.io.IOException;
 import java.net.URI;
 import java.text.DateFormat;
@@ -58,6 +59,15 @@ public class RuTorSearch implements Model {
         //String text = details.text().replaceAll("<br />", "");
         String text = getText(details);
         Elements images = details.getElementsByTag("img");
+        try {
+            Elements hidElems = document.getElementsByClass("hidearea");
+            for (Element hidElem : hidElems) {
+                Document doc = Jsoup.parse(hidElem.text());
+                images.addAll(doc.getElementsByAttribute("src"));
+                text = text + "\n" + doc.text();
+            }
+        } catch (Exception e) {
+        }
         HashSet<String> setUrls = new HashSet<>();
         Iterator<Element> iterator = images.iterator();
         while (iterator.hasNext()) {
@@ -256,13 +266,18 @@ public class RuTorSearch implements Model {
     }
 
    /* public static void main(String[] args) {
-        //PageRequest pageRequest = new PageRequest("http://rutor.info/torrent/612892/most_bron/broen-04x01-07-iz-08-2018-hdtvrip-720p-coldfilm", "gidbb");
         RuTorSearch ruTorSearch = new RuTorSearch();
-        NewsItem[] items = ruTorSearch.getItems("Dredd");
-        if (items.length>0)
-        System.out.println(items[items.length-1]);
-        System.out.println("error");
-        //System.out.println(newsPage);
+
+        *//*NewsItem[] newsItems = ruTorSearch.getItems("");
+        for (int i = 0; i < 20; i++) {
+            System.out.println(newsItems[i]);
+            System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
+        }*//*
+
+        NewsPage newsPage = ruTorSearch.getNewsPage(new PageRequest("http://free-tor.org/torrent/611015/kurs-biologii_a.p-bio-01x01-09-iz-13-2018-webrip-ideafilm", ""));
+        System.out.println(newsPage);
+        NewsPage newsPage1 = ruTorSearch.getNewsPage(new PageRequest("http://free-tor.org/torrent/628711/nadezhda-popova-cikl-", ""));
+        System.out.println(newsPage1);
     }*/
 }
 
