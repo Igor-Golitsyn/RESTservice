@@ -34,7 +34,6 @@
           <element id="library" level="project" name="Gradle: jfree:jfreechart:1.0.13" />
           <element id="library" level="project" name="Gradle: net.sf.jasperreports:jasperreports:4.0.1" />
           <element id="library" level="project" name="Gradle: rome:rome:1.0" />
-          <element id="library" level="project" name="Gradle: net.bull.javamelody:javamelody-core:1.70.0" />
           <element id="library" level="project" name="Gradle: mysql:mysql-connector-java:5.1.42" />
           <element id="library" level="project" name="Gradle: org.springframework.boot:spring-boot-starter:1.1.4.RELEASE" />
           <element id="library" level="project" name="Gradle: org.springframework.boot:spring-boot-starter-tomcat:1.1.4.RELEASE" />
@@ -82,6 +81,7 @@
           <element id="library" level="project" name="Gradle: org.bouncycastle:bctsp-jdk14:1.38" />
           <element id="library" level="project" name="Gradle: org.bouncycastle:bcprov-jdk14:1.38" />
           <element id="library" level="project" name="Gradle: org.bouncycastle:bcmail-jdk14:1.38" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.bull.javamelody/javamelody-core/1.72.0/199beaab8db0abb45b9c3bad58bf2659d2f96499/javamelody-core-1.72.0.jar" />
         </element>
       </element>
     </root>

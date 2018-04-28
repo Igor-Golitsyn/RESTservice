@@ -119,6 +119,7 @@ public class Vesti implements Model {
             for (int i = 0; i < newsItems.length; i++) {
                 System.out.println(newsItems[i]);
                 System.out.println(vesti.getNewsPage(new PageRequest(newsItems[i].getLink(), "vest")));
+                System.out.println("--------------------------------------------------------------");
             }
         } catch (Exception e) {
             e.printStackTrace();

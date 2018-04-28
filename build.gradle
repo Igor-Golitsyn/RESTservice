@@ -60,7 +60,7 @@ dependencies {
     /*compile 'org.hibernate:hibernate-c3p0:5.2.5.Final'
     compile 'c3p0:c3p0:0.9.1.2'*/
     
-    compile group: 'net.bull.javamelody', name: 'javamelody-core', version:'1.70.0'  //Мониторинг сервиса
+    compile group: 'net.bull.javamelody', name: 'javamelody-core', version:'1.72.0'  //Мониторинг сервиса
 
     compile 'mysql:mysql-connector-java:5.1.42'
     testCompile("junit:junit")
