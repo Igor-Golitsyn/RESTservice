@@ -24,6 +24,7 @@ public class RestServiceController {
             return new NewsItem[0];
         }
     }
+
     //Если сервис с поиском добавляем поиск (имяСервиса+Search)
     @RequestMapping("/torrentSearch")
     public NewsItem[] findTorrent(@RequestBody PageRequest pageRequest) {
@@ -67,13 +68,13 @@ public class RestServiceController {
 
     @RequestMapping("/newsList")
     public NewsListItem[] getNewsList() {
-        return NewsListController.CONTROLLER.getNewsList();
+        return new NewsListController().getNewsList();
     }
 
     @RequestMapping("/updateNewsListItem")
     public NewsListItem[] getNewsList(@RequestBody NewsListItem item) {
-        if (item == null) NewsListController.CONTROLLER.getNewsList();
-        return NewsListController.CONTROLLER.writeToBase(item);
+        if (item == null) new NewsListController().getNewsList();
+        return new NewsListController().writeToBase(item);
     }
 
     @RequestMapping("/gibdd")

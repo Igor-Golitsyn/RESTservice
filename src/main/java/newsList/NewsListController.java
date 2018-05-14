@@ -8,29 +8,29 @@ import java.util.logging.Logger;
 /**
  * Created by golit on 19.06.2017.
  */
-public enum NewsListController {
-    CONTROLLER;
-    private EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewsList");
-    private EntityManager em = factory.createEntityManager();
+public class NewsListController {
+    //CONTROLLER;
 
     public NewsListItem[] getNewsList() {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewsList");
+        EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         TypedQuery<NewsListItem> namedQuery = em.createNamedQuery("NewsListItem.getAll", NewsListItem.class);
         List<NewsListItem> newsListItems = namedQuery.getResultList();
         em.getTransaction().commit();
-        ArrayList<NewsListItem> clearList=new ArrayList<>();
-        for (NewsListItem item:newsListItems){
+        ArrayList<NewsListItem> clearList = new ArrayList<>();
+        for (NewsListItem item : newsListItems) {
             if (item.isShowNewsList()) clearList.add(item);
         }
-        // em.close();
-        // factory.close();
+        em.close();
+        factory.close();
 
         return clearList.toArray(new NewsListItem[clearList.size()]);
     }
 
     public NewsListItem[] writeToBase(NewsListItem newsListItem) {
-        //EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewsList");
-        //EntityManager em = factory.createEntityManager();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewsList");
+        EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         TypedQuery<NewsListItem> namedQuery = em.createNamedQuery("NewsListItem.find", NewsListItem.class).setParameter("name", newsListItem.getName());
         NewsListItem item;
@@ -49,8 +49,8 @@ public enum NewsListController {
             em.merge(newsListItem);
         }
         em.getTransaction().commit();
-        //em.close();
-        //factory.close();
+        em.close();
+        factory.close();
         return getNewsList();
     }
 
