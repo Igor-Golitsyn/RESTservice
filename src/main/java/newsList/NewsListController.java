@@ -20,7 +20,8 @@ public class NewsListController {
         em.getTransaction().commit();
         ArrayList<NewsListItem> clearList = new ArrayList<>();
         for (NewsListItem item : newsListItems) {
-            if (item.isShowNewsList()) clearList.add(item);
+            //if (item.isShowNewsList())
+                clearList.add(item);
         }
         em.close();
         factory.close();

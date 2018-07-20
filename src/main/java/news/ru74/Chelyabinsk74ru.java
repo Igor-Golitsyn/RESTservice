@@ -36,7 +36,8 @@ public class Chelyabinsk74ru implements Model {
     @Override
     public NewsPage getNewsPage(PageRequest pageRequest) throws Exception {
         Document document = getDocument(pageRequest.getUrl());
-        Elements texts = document.getElementsByAttributeValueStarting("style", "text-align");
+        //Elements texts = document.getElementsByAttributeValueStarting("style", "text-align");
+        Elements texts = document.getElementsByClass("article-text");
         StringBuilder text = new StringBuilder();
         Iterator<Element> iterator = texts.iterator();
         while (iterator.hasNext()) {
@@ -45,7 +46,8 @@ public class Chelyabinsk74ru implements Model {
         }
         String title = document.getElementsByAttributeValue("name", "title").first().attr("content");
         HashSet<String> imageLinks = new HashSet<>();
-        Elements images = document.getElementsByClass("img-responsive");
+        //Elements images = document.getElementsByClass("img-responsive");
+        Elements images = document.getElementsByClass("news-article__image");
         Iterator<Element> elementIterator = images.iterator();
         while (elementIterator.hasNext()) {
             imageLinks.add(elementIterator.next().attr("src"));
@@ -102,15 +104,16 @@ public class Chelyabinsk74ru implements Model {
         return document;
     }
 
-    /*public static void main(String[] args) throws Exception {
+   /* public static void main(String[] args) throws Exception {
         Chelyabinsk74ru chelyabinsk74ru = new Chelyabinsk74ru();
-        *//*NewsItem[] ooo = chelyabinsk74ru.getItems("");
+        NewsItem[] ooo = chelyabinsk74ru.getItems("");
         System.out.println(ooo.length);
-        for (NewsItem o : ooo) {
+        *//*for (NewsItem o : ooo) {
             System.out.println(o);
             System.out.println(new Date(o.getDate()));
         }*//*
-        PageRequest pageRequest = new PageRequest("http://chelyabinsk.74.ru/text/newsline/336945893150720.html", "chel74");
-        chelyabinsk74ru.getNewsPage(pageRequest);
+        PageRequest pageRequest = new PageRequest(ooo[1].getLink(), ooo[0].getName());
+        NewsPage page = chelyabinsk74ru.getNewsPage(pageRequest);
+        System.out.println(page);
     }*/
 }
