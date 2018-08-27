@@ -14,10 +14,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by golit on 13.06.2017.
@@ -27,8 +25,46 @@ public class Channel31 implements Model {
 
     @Override
     public NewsItem[] getItems(String searchWord) {
-        Document document = getDocument(ConstantManager.TV31NEWSURL);
-        if (document == null) return new NewsItem[0];
+        CopyOnWriteArrayList<NewsItem> newsItems = new CopyOnWriteArrayList<>();
+        LinkedList<Thread> threads = new LinkedList<>();
+        for (int i = 1; i < 10; i++) {
+            int finalI = i;
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ArrayList<NewsItem> items = getNewsItemsFromPage(finalI);
+                    for (NewsItem item : items) {
+                        boolean find = false;
+                        for (NewsItem mainItem : newsItems) {
+                            if (item.getLink().equals(mainItem.getLink())) {
+                                find = true;
+                            }
+                        }
+                        if (!find) newsItems.add(item);
+                    }
+                }
+            });
+            threads.add(thread);
+            thread.start();
+        }
+        for (Thread th : threads) {
+            try {
+                th.join();
+            } catch (InterruptedException e) {
+            }
+        }
+        newsItems.sort(new Comparator<NewsItem>() {
+            @Override
+            public int compare(NewsItem o1, NewsItem o2) {
+                return Long.compare(o2.getDate(), o1.getDate());
+            }
+        });
+        return newsItems.toArray(new NewsItem[newsItems.size()]);
+    }
+
+    private ArrayList<NewsItem> getNewsItemsFromPage(int num){
+        Document document = getDocument(ConstantManager.TV31NEWSURL + num);
+        if (document == null) return new ArrayList<>();
         ArrayList<NewsItem> newsItems = new ArrayList<>();
         Elements news = document.getElementsByClass("card border-on_grey shadow");
         for (Element element : news) {
@@ -50,7 +86,8 @@ public class Channel31 implements Model {
                 return Long.compare(o2.getDate(),o1.getDate());
             }
         });
-        return newsItems.toArray(new NewsItem[newsItems.size()]);
+        //return new CopyOnWriteArrayList<>(newsItems);
+        return newsItems;
     }
 
     @Override
@@ -62,7 +99,10 @@ public class Channel31 implements Model {
         String head = document.getElementsByClass("text-center").first().text();
         String text = "";
         Element mediacontainer = document.getElementsByClass("media-container").first().child(0);
-        setUrlImgs.add(mediacontainer.absUrl("src"));
+        String lnk = mediacontainer.absUrl("src");
+        if (lnk.endsWith("jpg")|| lnk.endsWith("jpeg")){
+            setUrlImgs.add(lnk);
+        }
         Elements ppp = document.getElementsByTag("p");
         for (Element el : ppp) {
             text = text + el.text() + "\n";
@@ -80,7 +120,7 @@ public class Channel31 implements Model {
         return document;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Channel31 channel31 = new Channel31();
         NewsItem[] ooo = channel31.getItems("");
         System.out.println(ooo.length);
@@ -91,5 +131,5 @@ public class Channel31 implements Model {
         PageRequest pageRequest = new PageRequest(ooo[ooo.length-1].getLink(),ooo[0].getName());
         NewsPage page = channel31.getNewsPage(pageRequest);
         System.out.println(page);
-    }
+    }*/
 }

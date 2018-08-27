@@ -36,7 +36,6 @@ public class Chelyabinsk74ru implements Model {
     @Override
     public NewsPage getNewsPage(PageRequest pageRequest) throws Exception {
         Document document = getDocument(pageRequest.getUrl());
-        //Elements texts = document.getElementsByAttributeValueStarting("style", "text-align");
         Elements texts = document.getElementsByClass("article-text");
         StringBuilder text = new StringBuilder();
         Iterator<Element> iterator = texts.iterator();
@@ -46,11 +45,13 @@ public class Chelyabinsk74ru implements Model {
         }
         String title = document.getElementsByAttributeValue("name", "title").first().attr("content");
         HashSet<String> imageLinks = new HashSet<>();
-        //Elements images = document.getElementsByClass("img-responsive");
         Elements images = document.getElementsByClass("news-article__image");
         Iterator<Element> elementIterator = images.iterator();
         while (elementIterator.hasNext()) {
-            imageLinks.add(elementIterator.next().attr("src"));
+            String lnk = elementIterator.next().attr("src");
+            if (lnk.endsWith("jpg")|| lnk.endsWith("jpeg")){
+                imageLinks.add(lnk);
+            }
         }
         NewsPage newsPage = new NewsPage(title, imageLinks, text.toString(), ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), "", "");
         return newsPage;
@@ -108,11 +109,11 @@ public class Chelyabinsk74ru implements Model {
         Chelyabinsk74ru chelyabinsk74ru = new Chelyabinsk74ru();
         NewsItem[] ooo = chelyabinsk74ru.getItems("");
         System.out.println(ooo.length);
-        *//*for (NewsItem o : ooo) {
+        for (NewsItem o : ooo) {
             System.out.println(o);
             System.out.println(new Date(o.getDate()));
-        }*//*
-        PageRequest pageRequest = new PageRequest(ooo[1].getLink(), ooo[0].getName());
+        }
+        PageRequest pageRequest = new PageRequest(ooo[0].getLink(), ooo[0].getName());
         NewsPage page = chelyabinsk74ru.getNewsPage(pageRequest);
         System.out.println(page);
     }*/

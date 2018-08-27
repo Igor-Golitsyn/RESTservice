@@ -7,7 +7,7 @@ import java.util.HashSet;
  */
 public interface ConstantManager {
     String VODA_UU_RU = "http://voda.uu.ru/otklyucheniya/";
-    String TV31NEWSURL = "https://31tv.ru/novosti";
+    String TV31NEWSURL = "https://31tv.ru/glavnye-novosti/page/";
     String CHELYABINSK74RU = "http://chelyabinsk.74.ru/text/newsline/?p=";
     String BASHORG = "http://www.bashorg.org/";
     String GIBDDPAGE1 = "http://www.gibdd.ru/r/74/accident/?PAGEN_1=1";
