@@ -105,16 +105,20 @@ public class Chelyabinsk74ru implements Model {
         return document;
     }
 
-   /* public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         Chelyabinsk74ru chelyabinsk74ru = new Chelyabinsk74ru();
         NewsItem[] ooo = chelyabinsk74ru.getItems("");
         System.out.println(ooo.length);
         for (NewsItem o : ooo) {
             System.out.println(o);
             System.out.println(new Date(o.getDate()));
+
+            PageRequest pageRequest = new PageRequest(o.getLink(), o.getName());
+            NewsPage page = chelyabinsk74ru.getNewsPage(pageRequest);
+            System.out.println(page);
         }
-        PageRequest pageRequest = new PageRequest(ooo[0].getLink(), ooo[0].getName());
+        /*PageRequest pageRequest = new PageRequest(ooo[0].getLink(), ooo[0].getName());
         NewsPage page = chelyabinsk74ru.getNewsPage(pageRequest);
-        System.out.println(page);
-    }*/
+        System.out.println(page);*/
+    }
 }

@@ -120,7 +120,7 @@ public class Channel31 implements Model {
         return document;
     }
 
-    /*public static void main(String[] args) {
+   /* public static void main(String[] args) {
         Channel31 channel31 = new Channel31();
         NewsItem[] ooo = channel31.getItems("");
         System.out.println(ooo.length);
