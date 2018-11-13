@@ -49,7 +49,7 @@ public class Chelyabinsk74ru implements Model {
         Iterator<Element> elementIterator = images.iterator();
         while (elementIterator.hasNext()) {
             String lnk = elementIterator.next().attr("src");
-            if (lnk.endsWith("jpg")|| lnk.endsWith("jpeg")){
+            if (lnk.endsWith("jpg") || lnk.endsWith("jpeg")) {
                 imageLinks.add(lnk);
             }
         }
@@ -65,12 +65,12 @@ public class Chelyabinsk74ru implements Model {
         Iterator<Element> itemIterator = elements.iterator();
         Set<Thread> threadSet = new HashSet<>();
         while (itemIterator.hasNext()) {
-            Element element = itemIterator.next().getElementsByClass("bl_title").first().children().first();
+            Element element = itemIterator.next().child(1);
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     String title = element.text();
-                    String newsUrl = element.absUrl("href");
+                    String newsUrl = element.child(0).absUrl("href");
                     String dateString = getDocument(newsUrl).getElementsByAttributeValue("name", "mediator_published_time").first().attr("content");
                     Date date;
                     try {
@@ -80,7 +80,9 @@ public class Chelyabinsk74ru implements Model {
                     } catch (Exception e) {
                         date = new Date();
                     }
-                    list.add(new NewsItem(title, newsUrl, 0, "", date.getTime()));
+                    if (!newsUrl.startsWith("https://74.ru/text/longread/business")) {
+                        list.add(new NewsItem(title, newsUrl, 0, "", date.getTime()));
+                    }
                 }
             });
             threadSet.add(thread);
@@ -109,6 +111,7 @@ public class Chelyabinsk74ru implements Model {
         Chelyabinsk74ru chelyabinsk74ru = new Chelyabinsk74ru();
         NewsItem[] ooo = chelyabinsk74ru.getItems("");
         System.out.println(ooo.length);
+
         for (NewsItem o : ooo) {
             System.out.println(o);
             System.out.println(new Date(o.getDate()));
