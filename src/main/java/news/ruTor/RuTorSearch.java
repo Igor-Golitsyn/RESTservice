@@ -10,9 +10,11 @@ import news.Model;
 import org.jsoup.select.Elements;
 import utils.ConstantManager;
 
-import javax.swing.text.html.HTML;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URI;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class RuTorSearch implements Model {
     private final DateFormat FORMAT = new SimpleDateFormat("dd MMM yy");
     private final int SIZE_OF_REZULT = 500;
+    private String workMiror = "";
 
     /**
      * Возвращает массив раздач
@@ -76,19 +79,23 @@ public class RuTorSearch implements Model {
                 if (url.contains(pic.toString().toLowerCase()) && !url.endsWith("gif")) setUrls.add(url);
             }
         }
-        download.children().first().remove();
-        String torrent = "";
-        for (Element el : download.children()) {
+        //download.children().first().remove();
+        String torrent = download.children().first().attr("href");
+        /*for (Element el : download.children()) {
             torrent = el.absUrl("href");
             if (!torrent.isEmpty()) break;
-        }
-        return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.SAVELINK, torrent);
+        }*/
+        pageRequest.setUrl(pageRequest.getUrl().replace(workMiror,RutorMirrors.rutor2.toString()));
+        //return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.SAVELINK, torrent);
+        //return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.MAGNET, torrent);
+        return new NewsPage(head, setUrls, text, "", "", ConstantManager.MAGNET, torrent);
     }
 
     private Document getDocument(String url) {
         Document document;
         try {
-            document = Jsoup.connect(url).timeout(60000).get();
+            //document = Jsoup.connect(url).proxy("192.168.0.1",9050).timeout(60000).get();
+            document = getDocFromProxy(url);
         } catch (IOException e) {
             document = null;
         }
@@ -117,14 +124,33 @@ public class RuTorSearch implements Model {
      * @return Document
      */
     private Document getStartDocument() {
-        Document document = new Document("");
         for (RutorMirrors mirror : RutorMirrors.values()) {
-            try {
-                document = Jsoup.connect(mirror.toString()).get();
-            } catch (IOException e) {
-            }
+                try {
+                    //document = Jsoup.connect(mirror.toString()).proxy("192.168.0.1",9050).timeout(60000).get();
+                    Document document = getDocFromProxy(mirror.toString());
+                    if (document.title().contains("rutor")) {
+                        workMiror = mirror.toString();
+                        return document;
+                    }
+                } catch (IOException e) {
+                }
         }
-        return document;
+        return new Document("");
+    }
+
+    private Document getDocFromProxy(String urlParse) throws IOException {
+        URL url = new URL(urlParse);
+        Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("192.168.0.1", 9050)); // or whatever your proxy is
+        HttpURLConnection uc = (HttpURLConnection) url.openConnection(proxy);
+        uc.connect();
+        String line = null;
+        StringBuffer tmp = new StringBuffer();
+        BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(),"utf-8"));
+        while ((line = in.readLine()) != null) {
+            tmp.append(line);
+        }
+        Document doc = Jsoup.parse(String.valueOf(tmp));
+        return doc;
     }
 
     /**
@@ -139,10 +165,19 @@ public class RuTorSearch implements Model {
         elements.addAll(document.getElementsByClass("gai"));
         elements.addAll(document.getElementsByClass("tum"));
         for (Element element : elements) {
-            int sizeNode = element.childNodeSize();
+            //int sizeNode = element.childNodeSize();
             String name = element.child(1).child(2).text();
-            String size = sizeNode < 7 ? element.child(2).text() : element.child(3).text();
+            //String size = sizeNode < 7 ? element.child(2).text() : element.child(3).text();
+            String size = "";
+            for (Element el : element.getAllElements()) {
+                if (el.text().endsWith("MB")||el.text().endsWith("GB")) {
+                    size = el.text();
+                }
+            }
             String link = element.child(1).child(2).absUrl("href");
+            if (link.isEmpty()){
+                link = workMiror + element.child(1).child(2).attr("href");
+            }
             String seed = element.getElementsByClass("green").get(0).text();
             String stringDate = element.child(0).text();
 
@@ -219,7 +254,12 @@ public class RuTorSearch implements Model {
             String urlFormat = mirror.toString() + "/search/%d/0/000/0/%s";
             String url = URI.create(String.format(Locale.getDefault(), urlFormat, page, searchString)).toASCIIString();
             try {
-                document = Jsoup.connect(url).get();
+                //document = Jsoup.connect(url).proxy("192.168.0.1",9050).timeout(60000).get();
+                document = getDocFromProxy(url);
+                workMiror = mirror.toString();
+                if (!document.title().contains("rutor")){
+                    continue;
+                }
             } catch (IOException e) {
                 continue;
             }
@@ -265,20 +305,15 @@ public class RuTorSearch implements Model {
         return newsItems.toArray(new NewsItem[newsItems.size()]);
     }
 
-   /* public static void main(String[] args) {
+    public static void main(String[] args) {
         RuTorSearch ruTorSearch = new RuTorSearch();
-
-        *//*NewsItem[] newsItems = ruTorSearch.getItems("");
-        for (int i = 0; i < 20; i++) {
+        NewsItem[] newsItems = ruTorSearch.getItems("android");
+        for (int i = 0; i < 10; i++) {
             System.out.println(newsItems[i]);
             System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
-        }*//*
+        }
 
-        NewsPage newsPage = ruTorSearch.getNewsPage(new PageRequest("http://free-tor.org/torrent/611015/kurs-biologii_a.p-bio-01x01-09-iz-13-2018-webrip-ideafilm", ""));
-        System.out.println(newsPage);
-        NewsPage newsPage1 = ruTorSearch.getNewsPage(new PageRequest("http://free-tor.org/torrent/628711/nadezhda-popova-cikl-", ""));
-        System.out.println(newsPage1);
-    }*/
+    }
 }
 
 

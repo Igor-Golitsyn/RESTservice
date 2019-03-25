@@ -17,6 +17,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
+        //System.setProperty("java.net.preferIPv6Addresses","true");
         SpringApplication.run(Application.class, args);
     }
 }

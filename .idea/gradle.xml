@@ -6,8 +6,8 @@
         <option name="createEmptyContentRootDirectories" value="true" />
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="C:/ProgramData/chocolatey/lib/gradle/tools/gradle-4.7" />
-        <option name="gradleJvm" value="10" />
+        <option name="gradleHome" value="C:/ProgramData/chocolatey/lib/gradle/tools/gradle-4.10" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />

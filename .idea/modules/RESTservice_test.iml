@@ -20,9 +20,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="RESTservice_main" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: dom4j:dom4j:1.6.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: xml-apis:xml-apis:1.0.b2" level="project" />
+    <orderEntry type="module" module-name="RESTservice_main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:1.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: net.sf.jasperreports:jasperreports:4.0.1" level="project" />
     <orderEntry type="library" name="Gradle: commons-digester:commons-digester:1.7" level="project" />
@@ -42,7 +42,7 @@
     <orderEntry type="library" name="Gradle: jfree:jcommon:1.0.16" level="project" />
     <orderEntry type="library" name="Gradle: com.jhlabs:filters:2.0.235" level="project" />
     <orderEntry type="library" name="Gradle: rome:rome:1.0" level="project" />
-    <orderEntry type="library" name="Gradle: net.bull.javamelody:javamelody-core:1.74.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.bull.javamelody:javamelody-core:1.76.0" level="project" />
     <orderEntry type="library" name="Gradle: mysql:mysql-connector-java:5.1.42" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter:1.1.4.RELEASE" level="project" />
