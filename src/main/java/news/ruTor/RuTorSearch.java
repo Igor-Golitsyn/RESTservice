@@ -10,16 +10,14 @@ import news.Model;
 import org.jsoup.select.Elements;
 import utils.ConstantManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.*;
 
 
 /**
@@ -55,7 +53,7 @@ public class RuTorSearch implements Model {
     public NewsPage getNewsPage(PageRequest pageRequest) {
         Document document = getDocument(pageRequest.getUrl());
         if (document == null)
-            return new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new HashSet<>(), "", "", "", "", "");
+            return ConstantManager.ERROR_PAGE;
         Element details = document.getElementById("details");
         Element download = document.getElementById("download");
         String head = document.getElementsByTag("h1").first().text();
@@ -85,10 +83,10 @@ public class RuTorSearch implements Model {
             torrent = el.absUrl("href");
             if (!torrent.isEmpty()) break;
         }*/
-        pageRequest.setUrl(pageRequest.getUrl().replace(workMiror,RutorMirrors.rutor2.toString()));
+        pageRequest.setUrl(pageRequest.getUrl().replace(workMiror,RutorMirrors.rutor3.toString()));
         //return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.SAVELINK, torrent);
-        //return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.MAGNET, torrent);
-        return new NewsPage(head, setUrls, text, "", "", ConstantManager.MAGNET, torrent);
+        return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.MAGNET, torrent);
+        //return new NewsPage(head, setUrls, text, "", "", ConstantManager.MAGNET, torrent);
     }
 
     private Document getDocument(String url) {
@@ -305,14 +303,104 @@ public class RuTorSearch implements Model {
         return newsItems.toArray(new NewsItem[newsItems.size()]);
     }
 
+    public String getDocumentPage(){
+        NewsItem[] startItems = getSartItems();
+
+        /*NewsItem[] small = new NewsItem[2];
+        for (int i = 0; i < small.length; i++) {
+            small[i]=startItems[i];
+        }
+        startItems=small;*/
+
+        ArrayList<NewsPage> pages = new ArrayList<>();
+        ExecutorService executor = Executors.newFixedThreadPool(70);
+        List<Callable<NewsPage>> tasks = new ArrayList<>();
+        for (NewsItem item: startItems){
+            tasks.add(new Callable<NewsPage>() {
+                @Override
+                public NewsPage call() throws Exception {
+                    return getNewsPage(new PageRequest(item.getLink(),""));
+                }
+            });
+        }
+        try {
+            List<Future<NewsPage>> rezults = executor.invokeAll(tasks);
+            for (Future<NewsPage> fut : rezults) {
+                NewsPage page = null;
+                try {
+                    page = fut.get();
+                } catch (ExecutionException e) {
+                    page = ConstantManager.ERROR_PAGE;
+                }
+                if (ConstantManager.ERROR_PAGE!=page) pages.add(page);
+            }
+        } catch (InterruptedException e) {
+            //e.printStackTrace();
+        }
+        executor.shutdown();
+
+        return createDoc(pages);
+    }
+
+    private String createDoc (ArrayList<NewsPage> pages){
+        Document doc = Jsoup.parse("<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"ru-RU\"></html>");
+        doc.head().appendElement("meta").attr("charset","utf-8").attr("pageEncoding","utf-8");
+        doc.head().appendElement("meta").attr("content","width=960").attr("name","viewport");
+        doc.title(ConstantManager.TITLE);
+        doc.head().appendElement("style").attr("type","text/css").text(ConstantManager.STYLE);
+
+        Element shadow = doc.body().appendElement("div").addClass("shadow");
+        Element block1 = shadow.appendElement("div").addClass("block1").attr("style","background-color: #f2f2f2;");
+        for (NewsPage page : pages) {
+            Element block2 = block1.appendElement("div").addClass("block2");
+            Element photoInfoTable = block2.appendElement("div").addClass("photoInfoTable");
+            Element headerFilm = photoInfoTable.appendElement("div").addClass("headerFilm");
+            Element moviename = headerFilm.appendElement("h1").addClass("moviename").text(page.getName());
+            Element photoBlock = photoInfoTable.appendElement("div").addClass("photoBlock");
+            Element filmImgBox = photoBlock.appendElement("div").addClass("film-img-box");
+            for (String imgPage: page.getImages()) {
+                filmImgBox.appendElement("img").attr("src",imgPage).attr("itemprop","image").attr("width","205");
+            }
+            Element infoTable = photoInfoTable.appendElement("div").addClass("infoTable");
+            Element info = infoTable.appendElement("table").addClass("info");
+            Element tbody = info.appendElement("tbody");
+            Element tr = tbody.appendElement("tr");
+            tr.appendElement("td").addClass("type").text("описание");
+            Element td = tr.appendElement("td");
+            td.appendElement("div").attr("style","position: relative").text(page.getText());
+
+            Element movieButtonsContainer = block2.appendElement("div").addClass("movie-buttons-container");
+            movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style","").attr("onclick","location.href='"+page.getButton1Action()+"'").text(page.getButton1Text());
+            movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style","").attr("onclick","location.href='"+page.getButton2Action()+"'").text(page.getButton2Text());
+        }
+
+        return doc.outerHtml();
+    }
+
+    private void saveDocumentToFile(String data, String file) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+            outputStreamWriter.write(data.toString());
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
+        String file = "C:\\Temp\\myfile.html";
         RuTorSearch ruTorSearch = new RuTorSearch();
-        NewsItem[] newsItems = ruTorSearch.getItems("android");
+        /*NewsItem[] newsItems = ruTorSearch.getItems("android");
         for (int i = 0; i < 10; i++) {
             System.out.println(newsItems[i]);
             System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
-        }
-
+        }*/
+        //ResponseEntity<String> responseEntity = new ResponseEntity<>(ruTorSearch.getDocumentPage(), HttpStatus.OK);
+        String str = ruTorSearch.getDocumentPage();
+        //System.out.println(str);
+        ruTorSearch.saveDocumentToFile(str,file);
     }
 }
 

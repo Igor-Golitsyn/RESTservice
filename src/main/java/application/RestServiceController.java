@@ -1,13 +1,17 @@
 package application;
 
 import news.*;
+import news.ruTor.RuTorSearch;
 import newsList.NewsListController;
 import newsList.NewsListItem;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import utils.ConstantManager;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by golit on 05.06.2017.
@@ -169,4 +173,14 @@ public class RestServiceController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping("/torPage")
+    public byte[] gettorPage() {
+        RuTorSearch ruTorSearch = new RuTorSearch();
+        try {
+            return ruTorSearch.getDocumentPage().getBytes("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            return Jsoup.parse("<html></html>").outerHtml().getBytes();
+        }
+    }
 }
