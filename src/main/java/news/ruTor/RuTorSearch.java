@@ -352,6 +352,7 @@ public class RuTorSearch implements Model {
                 ftp.disconnect();
             }
         } catch (Exception e) {
+            rutorPage = getDocumentPageThreads();
         }
         return rutorPage;
     }
