@@ -51,6 +51,10 @@ public class RuTorSearch implements Model {
 
     @Override
     public NewsPage getNewsPage(PageRequest pageRequest) {
+        String presentationUrl =  pageRequest.getUrl();
+        for (RutorMirrors mirror:RutorMirrors.values()){
+            presentationUrl = presentationUrl.replace(mirror.toString(),RutorMirrors.rutor2.toString());
+        }
         Document document = getDocument(pageRequest.getUrl());
         if (document == null)
             return ConstantManager.ERROR_PAGE;
@@ -59,13 +63,14 @@ public class RuTorSearch implements Model {
         String head = document.getElementsByTag("h1").first().text();
         //String text = details.text().replaceAll("<br />", "");
         String text = getText(details);
-        Elements images = details.getElementsByTag("img");
+        HashSet<String> setUrls = getImages(details);
+        /*Elements images = details.getElementsByTag("img");
         try {
             Elements hidElems = document.getElementsByClass("hidearea");
             for (Element hidElem : hidElems) {
                 Document doc = Jsoup.parse(hidElem.text());
                 images.addAll(doc.getElementsByAttribute("src"));
-                text = text + "\n" + doc.text();
+                //text = text + "\n" + doc.text();
             }
         } catch (Exception e) {
         }
@@ -76,17 +81,35 @@ public class RuTorSearch implements Model {
             for (RuTorPic pic : RuTorPic.values()) {
                 if (url.contains(pic.toString().toLowerCase()) && !url.endsWith("gif")) setUrls.add(url);
             }
-        }
+        }*/
         //download.children().first().remove();
         String torrent = download.children().first().attr("href");
         /*for (Element el : download.children()) {
             torrent = el.absUrl("href");
             if (!torrent.isEmpty()) break;
         }*/
-        pageRequest.setUrl(pageRequest.getUrl().replace(workMiror,RutorMirrors.rutor3.toString()));
+        //pageRequest.setUrl(pageRequest.getUrl().replace(workMiror,RutorMirrors.rutor2.toString()));
         //return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.SAVELINK, torrent);
-        return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.MAGNET, torrent);
+        return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, presentationUrl, ConstantManager.MAGNET, torrent);
         //return new NewsPage(head, setUrls, text, "", "", ConstantManager.MAGNET, torrent);
+    }
+
+    private HashSet<String> getImages(Element details) {
+        Elements images = details.getElementsByTag("img");
+        HashSet<String> setUrls = new HashSet<>();
+        for (Element el : images) {
+            if (el.attributes().hasKey("style")) setUrls.add(el.absUrl("src"));
+        }
+        if (setUrls.isEmpty()) {
+            Iterator<Element> iterator = images.iterator();
+            while (iterator.hasNext()) {
+                String url = iterator.next().absUrl("src");
+                for (RuTorPic pic : RuTorPic.values()) {
+                    if (url.contains(pic.toString().toLowerCase()) && !url.endsWith("gif")) setUrls.add(url);
+                }
+            }
+        }
+        return setUrls;
     }
 
     private Document getDocument(String url) {
@@ -123,15 +146,15 @@ public class RuTorSearch implements Model {
      */
     private Document getStartDocument() {
         for (RutorMirrors mirror : RutorMirrors.values()) {
-                try {
-                    //document = Jsoup.connect(mirror.toString()).proxy("192.168.0.1",9050).timeout(60000).get();
-                    Document document = getDocFromProxy(mirror.toString());
-                    if (document.title().contains("rutor")) {
-                        workMiror = mirror.toString();
-                        return document;
-                    }
-                } catch (IOException e) {
+            try {
+                //document = Jsoup.connect(mirror.toString()).proxy("192.168.0.1",9050).timeout(60000).get();
+                Document document = getDocFromProxy(mirror.toString());
+                if (document.title().contains("rutor")) {
+                    workMiror = mirror.toString();
+                    return document;
                 }
+            } catch (IOException e) {
+            }
         }
         return new Document("");
     }
@@ -143,7 +166,7 @@ public class RuTorSearch implements Model {
         uc.connect();
         String line = null;
         StringBuffer tmp = new StringBuffer();
-        BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(),"utf-8"));
+        BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(), "utf-8"));
         while ((line = in.readLine()) != null) {
             tmp.append(line);
         }
@@ -168,12 +191,12 @@ public class RuTorSearch implements Model {
             //String size = sizeNode < 7 ? element.child(2).text() : element.child(3).text();
             String size = "";
             for (Element el : element.getAllElements()) {
-                if (el.text().endsWith("MB")||el.text().endsWith("GB")) {
+                if (el.text().endsWith("MB") || el.text().endsWith("GB")) {
                     size = el.text();
                 }
             }
             String link = element.child(1).child(2).absUrl("href");
-            if (link.isEmpty()){
+            if (link.isEmpty()) {
                 link = workMiror + element.child(1).child(2).attr("href");
             }
             String seed = element.getElementsByClass("green").get(0).text();
@@ -196,32 +219,41 @@ public class RuTorSearch implements Model {
     }
 
     private String getText(Element details) {
-        List<Element> elementList = details.getElementsByTag("b");
-        Map<String, String> data = new HashMap<>();
-        StringBuilder rezult = new StringBuilder();
-        for (Element element : elementList) {
-            try {
-                String key = element.text();
-                String value = "";
-                String[] parts = details.toString().split(element.toString());
-                if (parts.length > 1) {
-                    String[] subPart = parts[1].split("\\<br\\>", 2);
-                    value = subPart[0];
+        String text = "";
+        Elements elements = details.getElementsByTag("span");
+        for (Element el : elements) {
+            if (el.attributes().hasKey("style")) text = text + el.text() + "\n";
+        }
+        text = clearFromTag(text);
+        if (text.isEmpty()) {
+            List<Element> elementList = details.getElementsByTag("b");
+            Map<String, String> data = new HashMap<>();
+            StringBuilder rezult = new StringBuilder();
+            for (Element element : elementList) {
+                try {
+                    String key = element.text();
+                    String value = "";
+                    String[] parts = details.toString().split(element.toString());
+                    if (parts.length > 1) {
+                        String[] subPart = parts[1].split("\\<br\\>", 2);
+                        value = subPart[0];
+                    }
+                    if (value == null || value.isEmpty() || value.contains("http") || value.contains("href")) {
+                        continue;
+                    }
+                    if (key != null) data.put(key, clearFromTag(value));
+                } catch (Exception e) {
                 }
-                if (value == null || value.isEmpty() || value.contains("http") || value.contains("href")) {
-                    continue;
-                }
-                if (key != null) data.put(key, clearFromTag(value));
-            } catch (Exception e) {
             }
+            List<String> set = new ArrayList<>(data.keySet());
+            Collections.sort(set);
+            for (String s : set) {
+                String val = data.get(s).trim();
+                if (!val.isEmpty()) rezult = rezult.append(s + val + "\n");
+            }
+            text = rezult.toString();
         }
-        List<String> set = new ArrayList<>(data.keySet());
-        Collections.sort(set);
-        for (String s : set) {
-            String val = data.get(s).trim();
-            if (!val.isEmpty()) rezult = rezult.append(s + val + "\n");
-        }
-        return rezult.toString();
+        return text;
     }
 
     private String clearFromTag(String string) {
@@ -255,7 +287,7 @@ public class RuTorSearch implements Model {
                 //document = Jsoup.connect(url).proxy("192.168.0.1",9050).timeout(60000).get();
                 document = getDocFromProxy(url);
                 workMiror = mirror.toString();
-                if (!document.title().contains("rutor")){
+                if (!document.title().contains("rutor")) {
                     continue;
                 }
             } catch (IOException e) {
@@ -303,7 +335,7 @@ public class RuTorSearch implements Model {
         return newsItems.toArray(new NewsItem[newsItems.size()]);
     }
 
-    public String getDocumentPage(){
+    public String getDocumentPage() {
         NewsItem[] startItems = getSartItems();
 
         /*NewsItem[] small = new NewsItem[2];
@@ -315,11 +347,11 @@ public class RuTorSearch implements Model {
         ArrayList<NewsPage> pages = new ArrayList<>();
         ExecutorService executor = Executors.newFixedThreadPool(70);
         List<Callable<NewsPage>> tasks = new ArrayList<>();
-        for (NewsItem item: startItems){
+        for (NewsItem item : startItems) {
             tasks.add(new Callable<NewsPage>() {
                 @Override
                 public NewsPage call() throws Exception {
-                    return getNewsPage(new PageRequest(item.getLink(),""));
+                    return getNewsPage(new PageRequest(item.getLink(), ""));
                 }
             });
         }
@@ -332,7 +364,7 @@ public class RuTorSearch implements Model {
                 } catch (ExecutionException e) {
                     page = ConstantManager.ERROR_PAGE;
                 }
-                if (ConstantManager.ERROR_PAGE!=page) pages.add(page);
+                if (ConstantManager.ERROR_PAGE != page) pages.add(page);
             }
         } catch (InterruptedException e) {
             //e.printStackTrace();
@@ -342,15 +374,15 @@ public class RuTorSearch implements Model {
         return createDoc(pages);
     }
 
-    private String createDoc (ArrayList<NewsPage> pages){
+    private String createDoc(ArrayList<NewsPage> pages) {
         Document doc = Jsoup.parse("<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"ru-RU\"></html>");
-        doc.head().appendElement("meta").attr("charset","utf-8").attr("pageEncoding","utf-8");
-        doc.head().appendElement("meta").attr("content","width=960").attr("name","viewport");
+        doc.head().appendElement("meta").attr("charset", "utf-8").attr("pageEncoding", "utf-8");
+        doc.head().appendElement("meta").attr("content", "width=960").attr("name", "viewport");
         doc.title(ConstantManager.TITLE);
-        doc.head().appendElement("style").attr("type","text/css").text(ConstantManager.STYLE);
+        doc.head().appendElement("style").attr("type", "text/css").text(ConstantManager.STYLE);
 
         Element shadow = doc.body().appendElement("div").addClass("shadow");
-        Element block1 = shadow.appendElement("div").addClass("block1").attr("style","background-color: #f2f2f2;");
+        Element block1 = shadow.appendElement("div").addClass("block1").attr("style", "background-color: #f2f2f2;");
         for (NewsPage page : pages) {
             Element block2 = block1.appendElement("div").addClass("block2");
             Element photoInfoTable = block2.appendElement("div").addClass("photoInfoTable");
@@ -358,8 +390,8 @@ public class RuTorSearch implements Model {
             Element moviename = headerFilm.appendElement("h1").addClass("moviename").text(page.getName());
             Element photoBlock = photoInfoTable.appendElement("div").addClass("photoBlock");
             Element filmImgBox = photoBlock.appendElement("div").addClass("film-img-box");
-            for (String imgPage: page.getImages()) {
-                filmImgBox.appendElement("img").attr("src",imgPage).attr("itemprop","image").attr("width","205");
+            for (String imgPage : page.getImages()) {
+                filmImgBox.appendElement("img").attr("src", imgPage).attr("itemprop", "image").attr("width", "205");
             }
             Element infoTable = photoInfoTable.appendElement("div").addClass("infoTable");
             Element info = infoTable.appendElement("table").addClass("info");
@@ -367,11 +399,11 @@ public class RuTorSearch implements Model {
             Element tr = tbody.appendElement("tr");
             tr.appendElement("td").addClass("type").text("описание");
             Element td = tr.appendElement("td");
-            td.appendElement("div").attr("style","position: relative").text(page.getText());
+            td.appendElement("div").attr("style", "position: relative").text(page.getText());
 
             Element movieButtonsContainer = block2.appendElement("div").addClass("movie-buttons-container");
-            movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style","").attr("onclick","location.href='"+page.getButton1Action()+"'").text(page.getButton1Text());
-            movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style","").attr("onclick","location.href='"+page.getButton2Action()+"'").text(page.getButton2Text());
+            movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style", "").attr("onclick", "location.href='" + page.getButton1Action() + "'").text(page.getButton1Text());
+            movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style", "").attr("onclick", "location.href='" + page.getButton2Action() + "'").text(page.getButton2Text());
         }
 
         return doc.outerHtml();
@@ -392,16 +424,19 @@ public class RuTorSearch implements Model {
     public static void main(String[] args) {
         String file = "C:\\Temp\\myfile.html";
         RuTorSearch ruTorSearch = new RuTorSearch();
-        /*NewsItem[] newsItems = ruTorSearch.getItems("android");
+        NewsItem[] newsItems = ruTorSearch.getItems("");
         for (int i = 0; i < 10; i++) {
             System.out.println(newsItems[i]);
             System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
-        }*/
-        //ResponseEntity<String> responseEntity = new ResponseEntity<>(ruTorSearch.getDocumentPage(), HttpStatus.OK);
-        String str = ruTorSearch.getDocumentPage();
+        }
+        //String str = ruTorSearch.getDocumentPage();
         //System.out.println(str);
-        ruTorSearch.saveDocumentToFile(str,file);
+        //ruTorSearch.saveDocumentToFile(str,file);
+       /* PageRequest request = new PageRequest("http://rutorc6mqdinc4cz.onion/torrent/690460/perspektiva_prospect-2018-web-dlrip-ot-ollandgroup-hdrezka-studio", "torrent");
+        //PageRequest request = new PageRequest("http://rutorc6mqdinc4cz.onion/torrent/690649/iobit-malware-fighter-pro-6.6.1.5153-2019-pc", "torrent");
+        NewsPage page = ruTorSearch.getNewsPage(request);
+        System.out.println("*********************************************************");
+        System.out.println(page);*/
     }
 }
-
 
