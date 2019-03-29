@@ -26,6 +26,13 @@ public interface ConstantManager {
     String TOKO_TEBE = "http://toko-tebe.ru/day/new-year/good";
     NewsPage ERROR_PAGE = new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new HashSet<>(), "", "", "", "", "");
 
+    int FtpPort = 21;
+    String FtpHost = "192.168.0.1";
+    String FtpTorrentUser = "torrent";
+    String FtpTorrentPassword = "torrent";
+    String FtpTorrentFileName = "rutorPage.html";
+    String FtpTorrentDir = "/";
+
     String TITLE = "Новинки RUTOR";
     String STYLE = "html {\n" +
             "      background-color: #e6e6e6;\n" +

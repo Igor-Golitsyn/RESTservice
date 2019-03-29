@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import news.Model;
 import org.jsoup.select.Elements;
 import utils.ConstantManager;
+import utils.FTPFunctions;
 
 import java.io.*;
 import java.net.*;
@@ -51,9 +52,9 @@ public class RuTorSearch implements Model {
 
     @Override
     public NewsPage getNewsPage(PageRequest pageRequest) {
-        String presentationUrl =  pageRequest.getUrl();
-        for (RutorMirrors mirror:RutorMirrors.values()){
-            presentationUrl = presentationUrl.replace(mirror.toString(),RutorMirrors.rutor2.toString());
+        String presentationUrl = pageRequest.getUrl();
+        for (RutorMirrors mirror : RutorMirrors.values()) {
+            presentationUrl = presentationUrl.replace(mirror.toString(), RutorMirrors.rutor2.toString());
         }
         Document document = getDocument(pageRequest.getUrl());
         if (document == null)
@@ -336,13 +337,33 @@ public class RuTorSearch implements Model {
     }
 
     public String getDocumentPage() {
+        String rutorPage = "";
+        try {
+            FTPFunctions ftp = new FTPFunctions(ConstantManager.FtpHost, ConstantManager.FtpPort, ConstantManager.FtpTorrentUser, ConstantManager.FtpTorrentPassword);
+            Calendar createdFileDate = ftp.getTimeOfFile(ConstantManager.FtpTorrentFileName, ConstantManager.FtpTorrentDir);
+            Calendar currentTime = Calendar.getInstance();
+            currentTime.add(Calendar.HOUR_OF_DAY, -4);
+            if (createdFileDate.after(currentTime)) {
+                rutorPage = ftp.getFileFromFTP(ConstantManager.FtpTorrentFileName);
+                ftp.disconnect();
+            } else {
+                rutorPage = getDocumentPageThreads();
+                ftp.uploadFTPFile(rutorPage, ConstantManager.FtpTorrentFileName, ConstantManager.FtpTorrentDir);
+                ftp.disconnect();
+            }
+        } catch (Exception e) {
+        }
+        return rutorPage;
+    }
+
+    private String getDocumentPageThreads() {
         NewsItem[] startItems = getSartItems();
 
         /*NewsItem[] small = new NewsItem[2];
         for (int i = 0; i < small.length; i++) {
-            small[i]=startItems[i];
+            small[i] = startItems[i];
         }
-        startItems=small;*/
+        startItems = small;*/
 
         ArrayList<NewsPage> pages = new ArrayList<>();
         ExecutorService executor = Executors.newFixedThreadPool(70);
@@ -370,8 +391,8 @@ public class RuTorSearch implements Model {
             //e.printStackTrace();
         }
         executor.shutdown();
-
-        return createDoc(pages);
+        String rutorPage = createDoc(pages);
+        return rutorPage;
     }
 
     private String createDoc(ArrayList<NewsPage> pages) {
@@ -421,22 +442,25 @@ public class RuTorSearch implements Model {
         }
     }
 
+
     public static void main(String[] args) {
         String file = "C:\\Temp\\myfile.html";
         RuTorSearch ruTorSearch = new RuTorSearch();
-        NewsItem[] newsItems = ruTorSearch.getItems("");
+        /*NewsItem[] newsItems = ruTorSearch.getItems("");
         for (int i = 0; i < 10; i++) {
             System.out.println(newsItems[i]);
             System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
-        }
+        }*/
         //String str = ruTorSearch.getDocumentPage();
         //System.out.println(str);
         //ruTorSearch.saveDocumentToFile(str,file);
        /* PageRequest request = new PageRequest("http://rutorc6mqdinc4cz.onion/torrent/690460/perspektiva_prospect-2018-web-dlrip-ot-ollandgroup-hdrezka-studio", "torrent");
         //PageRequest request = new PageRequest("http://rutorc6mqdinc4cz.onion/torrent/690649/iobit-malware-fighter-pro-6.6.1.5153-2019-pc", "torrent");
         NewsPage page = ruTorSearch.getNewsPage(request);
-        System.out.println("*********************************************************");
         System.out.println(page);*/
+        System.out.println("*********************************************************");
+        System.out.println(ruTorSearch.getDocumentPage());
+
     }
 }
 
