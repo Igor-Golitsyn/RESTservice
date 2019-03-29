@@ -4,6 +4,8 @@ package news.ruTor;
  * Created by golit on 05.06.2017.
  */
 public enum RutorMirrors {
+    rutor9("http://rutorc6mqdinc4cz.onion/kino"),
+    rutor8("http://rutor.is/kino"),
     rutor3("http://rutor.is"),
     rutor2("http://rutor.info"),
     rutor7("http://rutorc6mqdinc4cz.onion"),

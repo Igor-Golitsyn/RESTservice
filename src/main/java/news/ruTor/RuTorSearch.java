@@ -152,6 +152,7 @@ public class RuTorSearch implements Model {
                 Document document = getDocFromProxy(mirror.toString());
                 if (document.title().contains("rutor")) {
                     workMiror = mirror.toString();
+                    if (workMiror.endsWith("/kino")) workMiror = workMiror.replace("/kino","");
                     return document;
                 }
             } catch (IOException e) {
@@ -221,6 +222,7 @@ public class RuTorSearch implements Model {
 
     private String getText(Element details) {
         String text = "";
+        if (details==null)return text;
         Elements elements = details.getElementsByTag("span");
         for (Element el : elements) {
             if (el.attributes().hasKey("style")) text = text + el.text() + "\n";
@@ -288,6 +290,7 @@ public class RuTorSearch implements Model {
                 //document = Jsoup.connect(url).proxy("192.168.0.1",9050).timeout(60000).get();
                 document = getDocFromProxy(url);
                 workMiror = mirror.toString();
+                if (workMiror.endsWith("/kino")) workMiror = workMiror.replace("/kino","");
                 if (!document.title().contains("rutor")) {
                     continue;
                 }
@@ -447,11 +450,11 @@ public class RuTorSearch implements Model {
     public static void main(String[] args) {
         String file = "C:\\Temp\\myfile.html";
         RuTorSearch ruTorSearch = new RuTorSearch();
-        /*NewsItem[] newsItems = ruTorSearch.getItems("");
+        NewsItem[] newsItems = ruTorSearch.getItems("");
         for (int i = 0; i < 10; i++) {
             System.out.println(newsItems[i]);
             System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
-        }*/
+        }
         //String str = ruTorSearch.getDocumentPage();
         //System.out.println(str);
         //ruTorSearch.saveDocumentToFile(str,file);
@@ -459,8 +462,8 @@ public class RuTorSearch implements Model {
         //PageRequest request = new PageRequest("http://rutorc6mqdinc4cz.onion/torrent/690649/iobit-malware-fighter-pro-6.6.1.5153-2019-pc", "torrent");
         NewsPage page = ruTorSearch.getNewsPage(request);
         System.out.println(page);*/
-        System.out.println("*********************************************************");
-        System.out.println(ruTorSearch.getDocumentPage());
+        //System.out.println("*********************************************************");
+        //System.out.println(ruTorSearch.getDocumentPage());
 
     }
 }
