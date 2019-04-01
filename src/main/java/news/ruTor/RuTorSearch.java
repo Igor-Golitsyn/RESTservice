@@ -3,6 +3,7 @@ package news.ruTor;
 import news.NewsItem;
 import news.NewsPage;
 import news.PageRequest;
+import news.kinopoisk.Kinopoisk;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Document;
@@ -62,37 +63,23 @@ public class RuTorSearch implements Model {
         Element details = document.getElementById("details");
         Element download = document.getElementById("download");
         String head = document.getElementsByTag("h1").first().text();
-        //String text = details.text().replaceAll("<br />", "");
         String text = getText(details);
         HashSet<String> setUrls = getImages(details);
-        /*Elements images = details.getElementsByTag("img");
+        String torrent = download.children().first().attr("href");
+
+        String kinopoiskLink = "";
+        String kinopoiskRatImg = "";
         try {
-            Elements hidElems = document.getElementsByClass("hidearea");
-            for (Element hidElem : hidElems) {
-                Document doc = Jsoup.parse(hidElem.text());
-                images.addAll(doc.getElementsByAttribute("src"));
-                //text = text + "\n" + doc.text();
-            }
+            Element kinopoiskEl = details.getElementsByAttributeValueStarting("href", "http://www.kinopoisk.ru/film").first();
+            kinopoiskLink = kinopoiskEl.attr("href");
+            kinopoiskRatImg = kinopoiskEl.children().first().attr("src");
         } catch (Exception e) {
         }
-        HashSet<String> setUrls = new HashSet<>();
-        Iterator<Element> iterator = images.iterator();
-        while (iterator.hasNext()) {
-            String url = iterator.next().absUrl("src");
-            for (RuTorPic pic : RuTorPic.values()) {
-                if (url.contains(pic.toString().toLowerCase()) && !url.endsWith("gif")) setUrls.add(url);
-            }
-        }*/
-        //download.children().first().remove();
-        String torrent = download.children().first().attr("href");
-        /*for (Element el : download.children()) {
-            torrent = el.absUrl("href");
-            if (!torrent.isEmpty()) break;
-        }*/
-        //pageRequest.setUrl(pageRequest.getUrl().replace(workMiror,RutorMirrors.rutor2.toString()));
-        //return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), ConstantManager.SAVELINK, torrent);
+        if (!kinopoiskRatImg.isEmpty()){
+            setUrls.add(kinopoiskRatImg);
+        }
+
         return new NewsPage(head, setUrls, text, ConstantManager.OPENINBRAUZER, presentationUrl, ConstantManager.MAGNET, torrent);
-        //return new NewsPage(head, setUrls, text, "", "", ConstantManager.MAGNET, torrent);
     }
 
     private HashSet<String> getImages(Element details) {
@@ -110,6 +97,7 @@ public class RuTorSearch implements Model {
                 }
             }
         }
+
         return setUrls;
     }
 
@@ -455,6 +443,7 @@ public class RuTorSearch implements Model {
             System.out.println(newsItems[i]);
             System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
         }
+
         //String str = ruTorSearch.getDocumentPage();
         //System.out.println(str);
         //ruTorSearch.saveDocumentToFile(str,file);
