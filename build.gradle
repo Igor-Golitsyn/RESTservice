@@ -16,6 +16,8 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'war'
 
+mainClassName = "RESTservice.Application"
+
 repositories {
     mavenLocal()
     mavenCentral()
