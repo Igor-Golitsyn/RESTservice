@@ -438,7 +438,7 @@ public class RuTorSearch implements Model {
             td.appendElement("div").attr("style", "position: relative").text(page.getText());
 
             Element movieButtonsContainer = block2.appendElement("div").addClass("movie-buttons-container");
-            movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style", "").attr("onclick", "location.href='" + page.getButton1Action() + "'").text(page.getButton1Text());
+            movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style", "").attr("onclick", "window.open('" + page.getButton1Action() + "','_blank')").text(page.getButton1Text());
             movieButtonsContainer.appendElement("div").addClass("torrentbutton").attr("style", "").attr("onclick", "location.href='" + page.getButton2Action() + "'").text(page.getButton2Text());
         }
 
