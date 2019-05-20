@@ -11,7 +11,8 @@ public interface ConstantManager {
     String VODA_UU_RU = "http://voda.uu.ru/otklyucheniya/";
     String TV31NEWSURL = "https://31tv.ru/glavnye-novosti/page/";
     //String CHELYABINSK74RU = "http://chelyabinsk.74.ru/text/newsline/?p=";
-    String CHELYABINSK74RU = "https://74.ru/text/gorod/?p=";
+    //String CHELYABINSK74RU = "https://74.ru/text/gorod/?p=";
+    String CHELYABINSK74RU = "https://74.ru/text";
     String BASHORG = "http://www.bashorg.org/";
     String GIBDDPAGE1 = "http://www.gibdd.ru/r/74/accident/?PAGEN_1=1";
     String GIBDDPAGE2 = "http://www.gibdd.ru/r/74/accident/?PAGEN_1=2";
@@ -25,6 +26,11 @@ public interface ConstantManager {
     String MAGNET = "Magnet ссылка";
     String TOKO_TEBE = "http://toko-tebe.ru/day/new-year/good";
     NewsPage ERROR_PAGE = new NewsPage(ConstantManager.ERRORDOWNLOADPAGE, new HashSet<>(), "", "", "", "", "");
+    String PROXY_ADR = "192.168.0.1";
+    int PROXY_PORT = 9050;
+    int PROXY_HTTP_PORT = 8118;
+    String NNMCLUB = "http://nnmclub5toro7u65.onion";
+    String NNMCLUBRSS = NNMCLUB + "/forum/rssp.xml";
 
     int FtpPort = 21;
     String FtpHost = "192.168.0.1";

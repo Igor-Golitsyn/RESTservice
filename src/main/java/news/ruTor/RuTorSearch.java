@@ -108,8 +108,8 @@ public class RuTorSearch implements Model {
     private Document getDocument(String url) {
         Document document;
         try {
-            //document = Jsoup.connect(url).proxy("192.168.0.1",9050).timeout(60000).get();
-            document = getDocFromProxy(url);
+            document = Jsoup.connect(url).proxy(ConstantManager.PROXY_ADR,ConstantManager.PROXY_HTTP_PORT).timeout(60000).get();
+            //document = getDocFromProxy(url);
         } catch (IOException e) {
             document = null;
         }
@@ -140,8 +140,8 @@ public class RuTorSearch implements Model {
     private Document getStartDocument() {
         for (RutorMirrors mirror : RutorMirrors.values()) {
             try {
-                //document = Jsoup.connect(mirror.toString()).proxy("192.168.0.1",9050).timeout(60000).get();
-                Document document = getDocFromProxy(mirror.toString());
+                Document document = Jsoup.connect(mirror.toString()).proxy(ConstantManager.PROXY_ADR,ConstantManager.PROXY_HTTP_PORT).timeout(60000).get();
+                //Document document = getDocFromProxy(mirror.toString());
                 if (document.title().contains("rutor")) {
                     workMiror = mirror.toString();
                     if (workMiror.endsWith("/kino")) workMiror = workMiror.replace("/kino", "");
@@ -153,9 +153,10 @@ public class RuTorSearch implements Model {
         return new Document("");
     }
 
-    private Document getDocFromProxy(String urlParse) throws IOException {
+    /*private Document getDocFromProxy(String urlParse) throws IOException {
         URL url = new URL(urlParse);
-        Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("192.168.0.1", 9050)); // or whatever your proxy is
+        System.out.println(url);
+        Proxy proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress(ConstantManager.PROXY_ADR, ConstantManager.PROXY_PORT)); // or whatever your proxy is
         HttpURLConnection uc = (HttpURLConnection) url.openConnection(proxy);
         uc.connect();
         String line = null;
@@ -165,8 +166,9 @@ public class RuTorSearch implements Model {
             tmp.append(line);
         }
         Document doc = Jsoup.parse(String.valueOf(tmp));
+        System.out.println(doc);
         return doc;
-    }
+    }*/
 
     /**
      * Возвращает Список раздач со страницы
@@ -279,8 +281,8 @@ public class RuTorSearch implements Model {
             String urlFormat = mirror.toString() + "/search/%d/0/000/0/%s";
             String url = URI.create(String.format(Locale.getDefault(), urlFormat, page, searchString)).toASCIIString();
             try {
-                //document = Jsoup.connect(url).proxy("192.168.0.1",9050).timeout(60000).get();
-                document = getDocFromProxy(url);
+                document = Jsoup.connect(url).proxy(ConstantManager.PROXY_ADR,ConstantManager.PROXY_HTTP_PORT).timeout(60000).get();
+                //document = getDocFromProxy(url);
                 workMiror = mirror.toString();
                 if (workMiror.endsWith("/kino")) workMiror = workMiror.replace("/kino", "");
                 if (!document.title().contains("rutor")) {
@@ -459,16 +461,17 @@ public class RuTorSearch implements Model {
 
 
     public static void main(String[] args) {
-        String file = "C:\\Temp\\myfile.html";
+        //String file = "C:\\Temp\\myfile.html";
         RuTorSearch ruTorSearch = new RuTorSearch();
-        /*NewsItem[] newsItems = ruTorSearch.getItems("");
+        NewsItem[] newsItems = ruTorSearch.getItems("");
         for (int i = 0; i < 10; i++) {
             System.out.println(newsItems[i]);
             System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
-        }*/
+        }
 
-        String str = ruTorSearch.getDocumentPage();
-        System.out.println(str);
+       /* String str = ruTorSearch.getDocumentPage();
+        System.out.println(str);*/
+
         //ruTorSearch.saveDocumentToFile(str,file);
        /* PageRequest request = new PageRequest("http://rutorc6mqdinc4cz.onion/torrent/690460/perspektiva_prospect-2018-web-dlrip-ot-ollandgroup-hdrezka-studio", "torrent");
         //PageRequest request = new PageRequest("http://rutorc6mqdinc4cz.onion/torrent/690649/iobit-malware-fighter-pro-6.6.1.5153-2019-pc", "torrent");
