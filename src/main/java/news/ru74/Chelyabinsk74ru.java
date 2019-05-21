@@ -5,6 +5,7 @@ import news.NewsItem;
 import news.NewsPage;
 import news.PageRequest;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -37,50 +38,45 @@ public class Chelyabinsk74ru implements Model {
     public NewsPage getNewsPage(PageRequest pageRequest) throws Exception {
         Document document = getDocument(pageRequest.getUrl());
         Elements texts = document.getElementsByClass("article-text");
+        if (texts.isEmpty()) texts=document.getElementsByClass("content-blocks-list");
         StringBuilder text = new StringBuilder();
         Iterator<Element> iterator = texts.iterator();
         while (iterator.hasNext()) {
             text.append(iterator.next().text());
             text.append("\n");
         }
-        String title = document.getElementsByAttributeValue("name", "title").first().attr("content");
         HashSet<String> imageLinks = new HashSet<>();
-        Elements images = document.getElementsByClass("news-article__image");
+        Elements images = document.getElementsByAttributeValue("name","item-image");
+        if (images.size()<1) {
+            images = document.getElementsByAttributeValue("property","og:image");
+        }
         Iterator<Element> elementIterator = images.iterator();
         while (elementIterator.hasNext()) {
-            String lnk = elementIterator.next().attr("src");
-            if (lnk.endsWith("jpg") || lnk.endsWith("jpeg")) {
-                imageLinks.add(lnk);
-            }
+            Element next = elementIterator.next();
+            System.out.println(next.attributes());
+            imageLinks.add(next.absUrl("content"));
         }
-        NewsPage newsPage = new NewsPage(title, imageLinks, text.toString(), ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), "", "");
+        NewsPage newsPage = new NewsPage(pageRequest.getNewsName(), imageLinks, text.toString(), ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), "", "");
         return newsPage;
     }
 
     private CopyOnWriteArrayList<NewsItem> getNewsItemsFromPage(int num) {
         CopyOnWriteArrayList<NewsItem> list = new CopyOnWriteArrayList<>();
-        //Document document = getDocument(ConstantManager.CHELYABINSK74RU + num);
         Document document = getDocument(ConstantManager.CHELYABINSK74RU);
         if (document == null) return list;
-        //System.out.println(document);
-        //Elements elements = document.getElementsByClass("news_title_tape");
         Elements elements = document.getElementsByClass("record-headers");
         if (elements.size()==0) elements = document.getElementsByClass("style-newsline__title");
-        //System.out.println("size = "+elements.size());
         Iterator<Element> itemIterator = elements.iterator();
         Set<Thread> threadSet = new HashSet<>();
         while (itemIterator.hasNext()) {
 
             Element element = itemIterator.next();
-            //Element element = it.child(1);
-            //System.out.println(element);
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                         String title = "";
                         String newsUrl = "";
                         String dateString = "";
-                    //System.out.println("--"+element.className());
                     if (element.className().equals("style-newsline__title")){
                          title = element.text();
                          newsUrl = element.absUrl("href");
@@ -90,7 +86,6 @@ public class Chelyabinsk74ru implements Model {
                         }
                     }
                     if (element.className().equals("record-headers")){
-                        //System.out.println(element.child(0));
                         title = element.child(0).text();
                         newsUrl = element.child(0).absUrl("href");
                         try {
@@ -98,8 +93,6 @@ public class Chelyabinsk74ru implements Model {
                         } catch (Exception e){
                         }
                     }
-                    //String title = element.text();
-                    //String newsUrl = element.child(0).absUrl("href");
                     Date date;
                     try {
                         synchronized (FORMAT) {
@@ -144,9 +137,10 @@ public class Chelyabinsk74ru implements Model {
             System.out.println(o);
             System.out.println(new Date(o.getDate()));
 
-           /* PageRequest pageRequest = new PageRequest(o.getLink(), o.getName());
+            PageRequest pageRequest = new PageRequest(o.getLink(), o.getName());
             NewsPage page = chelyabinsk74ru.getNewsPage(pageRequest);
-            System.out.println(page);*/
+            System.out.println(page);
+            break;
         }
         /*PageRequest pageRequest = new PageRequest(ooo[0].getLink(), ooo[0].getName());
         NewsPage page = chelyabinsk74ru.getNewsPage(pageRequest);
