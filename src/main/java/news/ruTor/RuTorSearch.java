@@ -303,6 +303,7 @@ public class RuTorSearch implements Model {
      * @return
      */
     private NewsItem[] getItemsFromWord(String word) {
+        //System.out.println("getItemsFromWord: "+ word);
         CopyOnWriteArrayList<NewsItem> newsItems = new CopyOnWriteArrayList<>();
         Document document0 = getPage(word, 0);
         newsItems.addAll(getItemsFromDocument(document0));
@@ -463,10 +464,11 @@ public class RuTorSearch implements Model {
     public static void main(String[] args) {
         //String file = "C:\\Temp\\myfile.html";
         RuTorSearch ruTorSearch = new RuTorSearch();
-        NewsItem[] newsItems = ruTorSearch.getItems("");
+        NewsItem[] newsItems = ruTorSearch.getItems("dredd");
+        System.out.println(newsItems.length);
         for (int i = 0; i < 10; i++) {
             System.out.println(newsItems[i]);
-            System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[i].getLink(), "")));
+            System.out.println(ruTorSearch.getNewsPage(new PageRequest(newsItems[0].getLink(), "")));
         }
 
        /* String str = ruTorSearch.getDocumentPage();

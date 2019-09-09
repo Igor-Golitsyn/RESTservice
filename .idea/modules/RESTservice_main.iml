@@ -17,7 +17,7 @@
     <facet type="web" name="Web Gradle : RESTservice.war">
       <configuration>
         <webroots>
-          <root url="file://C:\JAVA\RESTservice\src\main\webapp" relative="/" />
+          <root url="file://$MODULE_DIR$/../../src/main/webapp" relative="/" />
         </webroots>
       </configuration>
     </facet>
@@ -31,7 +31,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: dom4j:dom4j:1.6.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: xml-apis:xml-apis:1.0.b2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:1.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: net.sf.jasperreports:jasperreports:4.0.1" level="project" />
@@ -55,6 +54,7 @@
     <orderEntry type="library" name="Gradle: rome:rome:1.0" level="project" />
     <orderEntry type="library" name="Gradle: net.bull.javamelody:javamelody-core:1.76.0" level="project" />
     <orderEntry type="library" name="Gradle: mysql:mysql-connector-java:5.1.42" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: dom4j:dom4j:1.6.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter:1.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-tomcat:1.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.3.3" level="project" />

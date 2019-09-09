@@ -126,9 +126,10 @@ public class Channel31 implements Model {
         System.out.println(ooo.length);
         for (NewsItem o : ooo) {
             System.out.println(o);
-            System.out.println(new Date(o.getDate()));
+            //System.out.println(new Date(o.getDate()));
         }
         PageRequest pageRequest = new PageRequest(ooo[ooo.length-1].getLink(),ooo[0].getName());
+        System.out.println(pageRequest);
         NewsPage page = channel31.getNewsPage(pageRequest);
         System.out.println(page);
     }*/

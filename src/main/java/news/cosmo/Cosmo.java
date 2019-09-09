@@ -30,11 +30,13 @@ public class Cosmo implements Model {
         if (startDocument == null) return new NewsItem[0];
         Elements elements = startDocument.getElementsByClass("discussed-news-list");
         elements.addAll(startDocument.getElementsByClass("mobile-article-list article-list"));
+        System.out.println(elements.size());
         ArrayList<NewsItem> newsItems = new ArrayList<>();
         for (Element elBig : elements) {
             for (Element el : elBig.children()) {
                 String link = el.getElementsByAttribute("href").first().absUrl("href");
-                String title = el.getElementsByAttribute("src").attr("alt");
+                //String title = el.getElementsByAttribute("src").attr("alt");
+                String title = String.valueOf(el.getElementsByAttribute("alt").attr("alt"));
                 String timeStr = el.getElementsByAttribute("datetime").attr("datetime");
                 if (timeStr.isEmpty()) {
                     String tempStr = el.getElementsByAttribute("href").last().attr("href");
@@ -62,13 +64,13 @@ public class Cosmo implements Model {
         HashSet<String> images = new HashSet<>();
         Elements picElem = document.getElementsByClass("article-pic image-count-1");
         picElem.addAll(document.getElementsByClass("article-img-div"));
-        for (Element el :picElem) {
+        for (Element el : picElem) {
             try {
                 images.add(el.getElementsByAttribute("src").first().absUrl("src"));
             } catch (Exception e) {
             }
         }
-        return new NewsPage(titleDoc.replaceAll("\\|","\n"),images,text,ConstantManager.OPENINBRAUZER,pageRequest.getUrl(),"","");
+        return new NewsPage(titleDoc.replaceAll("\\|", "\n"), images, text, ConstantManager.OPENINBRAUZER, pageRequest.getUrl(), "", "");
     }
 
     private Document getDocument(String url) {
@@ -81,14 +83,14 @@ public class Cosmo implements Model {
         return document;
     }
 
-    /*public static void main(String[] args) {
+   /* public static void main(String[] args) {
         Cosmo cosmo = new Cosmo();
         try {
             NewsItem[] newsItems = cosmo.getItems("");
             for (NewsItem item : newsItems) {
                 System.out.println(item);
-                NewsPage newsPage = cosmo.getNewsPage(new PageRequest(item.getLink(), ""));
-                System.out.println(newsPage);
+                *//*NewsPage newsPage = cosmo.getNewsPage(new PageRequest(item.getLink(), ""));
+                System.out.println(newsPage);*//*
             }
         } catch (Exception e) {
             e.printStackTrace();
