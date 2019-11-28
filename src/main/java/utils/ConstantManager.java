@@ -31,6 +31,9 @@ public interface ConstantManager {
     int PROXY_HTTP_PORT = 8118;
     String NNMCLUB = "http://nnmclub5toro7u65.onion";
     String NNMCLUBRSS = NNMCLUB + "/forum/rssp.xml";
+    String CHELADMINPIC = "https://cheladmin.ru/sites/default/files/n/Baeeeer/otmzan-5.gif";
+    String CHELADMINURL = "https://cheladmin.ru/ru/news/vnimanie-otmena-zanyatiy-1";
+    String OBLRU_SCHOOL = "https://www.1obl.ru/news/o-lyudyakh/otmena-shkolnyh-zanjatii";
 
     int FtpPort = 21;
     String FtpHost = "192.168.0.1";

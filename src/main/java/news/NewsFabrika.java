@@ -7,6 +7,7 @@ import news.mchs.Mchs74;
 import news.popMech.PopMech;
 import news.ru74.Chelyabinsk74ru;
 import news.ruTor.RuTorSearch;
+import news.shkola.ShkolaOtmena;
 import news.tokoTebe.TokoTebe;
 import news.tv31.Channel31;
 import news.vesti.Vesti;
@@ -42,6 +43,8 @@ public enum  NewsFabrika {
                 return new Cosmo();
             case "vesti":
                 return new Vesti();
+            case "shkola":
+                return new ShkolaOtmena();
             default:
                 return null;
         }
